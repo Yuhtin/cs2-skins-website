@@ -1,3 +1,10 @@
+html, body, #root, * {
+  user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  -moz-user-select: none;
+  /* hide selection highlight */
+}
 body {
   margin: 0;
   height: 100dvh;
@@ -14,6 +21,7 @@ body {
   flex-direction: column;
   height: inherit;
   width: inherit;
+  overflow: hidden;
 }
 
 #root > div,
@@ -25,10 +33,39 @@ body {
   align-items: center;
   justify-content: center;
 }
-#root > div{
+#root > div {
+  position: relative;
+  z-index: 0;
+}
+#root > div::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100dvw;
+  height: 100dvh;
   background-image: url('/images/De_mirage_cs2.webp');
   background-size: cover;
   background-position: center;
+  z-index: 0;
+  opacity: 1;
+  animation: mirage-bg-scale 30s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes mirage-bg-scale {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.08, 1.13);
+  }
+  60% {
+    transform: scale(0.98, 1);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 .header {
@@ -36,11 +73,12 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #181818;
+  background-color: rgba(23, 23, 23, 0.6);
   padding: 10px 30px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   width: 100dvw;
   z-index: 2;
+  backdrop-filter: blur(2px);
 }
 
 .page-container {
@@ -130,17 +168,18 @@ body {
 .taskbar {
   position: sticky;
   top: 0;
-  background-color: #1e1e1e;
+  background-color: rgba(30, 30, 30, 0.5);
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 12px 20px;
-  border-bottom: 1px solid #333;
+  border-bottom: 1px solid #33333350;
   z-index: 10;
   width: 100dvw;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
   font-size: 0.95rem;
   color: #ccc;
+  backdrop-filter: blur(2px);
 }
 
 .change-team-btn {

@@ -7,12 +7,12 @@ export default function TeamSelector({ onSelect }) {
       <div className="team-options">
         <div className="team-card ct" onClick={() => onSelect('CT')}>
           <h3>CT</h3>
-          <img src="/images/ct.png" alt="CT" />
+          <img src="/images/ct.png" alt="CT" draggable={false} />
           <p>COUNTER-TERRORIST</p>
         </div>
         <div className="team-card t" onClick={() => onSelect('T')}>
           <h3>T</h3>
-          <img src="/images/tt.png" alt="T" />
+          <img src="/images/tt.png" alt="T"  draggable={false} />
           <p>TERRORIST</p>
         </div>
       </div>

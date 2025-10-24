@@ -32,7 +32,7 @@ export default function KeychainPopup({ keychains, selectedKeychainId, offsetX, 
             onSelect(kc.id, localOffsetX, localOffsetY);
             }}
           >
-            <img src={kc.image} alt={kc.name} />
+            <img src={kc.image} alt={kc.name} draggable={false}/>
             <span>{kc.name}</span>
           </div>
         ))}

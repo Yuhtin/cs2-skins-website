@@ -40,7 +40,7 @@ export default function StickerPopup({ stickers, selectedStickers, onSelect, onC
           >
             {sticker ? (
                <>
-            <img src={sticker.image} alt={sticker.name} />
+            <img src={sticker.image} alt={sticker.name} draggable={false}/>
             <button
               className="remove-sticker-btn"
               onClick={(e) => {
@@ -76,7 +76,7 @@ export default function StickerPopup({ stickers, selectedStickers, onSelect, onC
                 <img
                 src={st.image}
                 alt={st.name}
-                loading="lazy"
+                loading="lazy" draggable={false}
                 />
                 <span>{st.name}</span>
             </div>

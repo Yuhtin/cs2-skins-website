@@ -14,7 +14,7 @@ export default function UserHeader({ user }) {
 
   return (
     <div>
-      <img src={user.avatar} alt="Avatar" />
+      <img src={user.avatar} alt="Avatar" draggable={false} />
       <span>{user.personaname}</span>
       <button onClick={handleLogout}>Wyloguj</button>
     </div>

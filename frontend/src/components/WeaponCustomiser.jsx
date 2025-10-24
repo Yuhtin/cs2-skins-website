@@ -276,7 +276,7 @@ export default function WeaponCustomizer({ weapon, onClose, onSave }) {
                   <img
                       src={skin.image}
                       alt={skin.paint_name}
-                      className="skin-thumb"
+                      className="skin-thumb" draggable={false}
                   />
                   </button>
                 </React.Fragment>
@@ -338,7 +338,7 @@ export default function WeaponCustomizer({ weapon, onClose, onSave }) {
                 <img
                     src={selectedSkin.image}
                     alt={selectedSkin.paint_name}
-                    className="preview-image"
+                    className="preview-image" draggable={false}
                 />
                 ) : (
                 <div className="no-skin">Wybierz skin</div>
@@ -368,7 +368,7 @@ export default function WeaponCustomizer({ weapon, onClose, onSave }) {
                                       <img
                                       src={keychains.find(k => k.id === keychainId)?.image}
                                       alt="Keychain"
-                                      className="keychain-img"
+                                      className="keychain-img" draggable={false}
                                       />
                                       <span>{keychains.find(k => k.id === keychainId)?.name}</span>
                                       <p>X: {offsetX} Y: {offsetY}</p>
@@ -384,7 +384,7 @@ export default function WeaponCustomizer({ weapon, onClose, onSave }) {
                                   {selectedStickers.map((sticker, i) =>
                                       sticker ? (
                                       <div key={i} className="sticker-preview">
-                                          <img src={sticker.image} alt={sticker.name} className="sticker-img" />
+                                          <img src={sticker.image} alt={sticker.name} className="sticker-img"  draggable={false}/>
                                           <span>{sticker.name}</span>
                                       </div>
                                       ) : (

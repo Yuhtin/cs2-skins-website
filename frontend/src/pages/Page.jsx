@@ -14,6 +14,14 @@ export default function Page({ user, team, setTeam }) {
     window.location.href = `${API_URL}/steamauth/logout.php`;
   };
 
+  //add class skinspage to body on load and remove on unload
+  useEffect(() => {
+    document.body.classList.add('skinspage');
+    return () => {
+      document.body.classList.remove('skinspage');
+    };
+  }, []);
+
   return (
     <div className="page">
       <div className="header">

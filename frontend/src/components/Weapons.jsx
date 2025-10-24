@@ -90,8 +90,16 @@ export default function Weapons({ team }) {
         }
         const agentsMap = await fetch('/data/agents_en.json');
         const agentsData = await agentsMap.json();
-        const agentT = agentsData.find(a => a.model === agentsJson.agent_t);
-        const agentCT = agentsData.find(a => a.model === agentsJson.agent_ct);
+        let agentT = agentsData.find(a => a.model === agentsJson.agent_t);
+        if (!agentT) {
+            agentT = { model: "null", name: 'Agent | Default' };
+        }
+        let agentCT = agentsData.find(a => a.model === agentsJson.agent_ct);
+        if (!agentCT) {
+            agentCT = { model: "null", name: 'Agent | Default' };
+        }
+        //console.log('Agent T:', agentT);
+        //console.log('Agent CT:', agentCT);
         setAgent_T(agentT);
         setAgent_CT(agentCT);
 
@@ -218,8 +226,20 @@ export default function Weapons({ team }) {
           }
           return w;
         });
-        const toPreload = updatedWeapons.map(w => w.image).filter(Boolean).slice(0, 24);
-        await preloadImages(toPreload); // preload images for performance
+        // Preload all weapon images (not tylko 24)
+        const allImages = updatedWeapons.map(w => w.image).filter(Boolean);
+        // Preload also all images for currently set skins in dbSkins (np. po restarcie strony)
+        const dbSkinImages = dbSkins
+          .map(skin => {
+            const matched = skinMap.find(
+              m => Number(m.weapon_defindex) === Number(skin.weapon_defindex) &&
+                   Number(m.paint) === Number(skin.weapon_paint_id)
+            );
+            return matched?.image;
+          })
+          .filter(Boolean);
+        const toPreload = Array.from(new Set([...allImages, ...dbSkinImages]));
+        await preloadImages(toPreload); // preload all relevant images for performance
         setWeapons(updatedWeapons);
 
         } catch (err) {
@@ -229,19 +249,20 @@ export default function Weapons({ team }) {
 
     loadAll();
     }, [team]);
-//preload images for weapons
-  const preloadImages = (urls) =>
-    Promise.all(
-      urls.map(url => new Promise(resolve => {
-        if (!url) return resolve();
-        const img = new Image();
-        img.onload = img.onerror = () => resolve();
-        img.src = url;
-      }))
-  );
+    //preload images for weapons
+      const preloadImages = (urls) =>
+        Promise.all(
+          urls.map(url => new Promise(resolve => {
+            if (!url) return resolve();
+            const img = new Image();
+            img.onload = img.onerror = () => resolve();
+            img.src = url;
+          }))
+      );
 
   // knife modele
   const knifeModels = weapons.filter(w => w.category === 'Knife');
+  console.log('Knife Models:', knifeModels);
 
   const categories = [...new Set(weapons.map(w => w.category))];
   const filteredByCategory = weapons.filter(w => w.category === selectedCategory);
@@ -467,7 +488,7 @@ const handleSaveWeapon = async (data) => {
                         src={selectedKnife?.image || '/weapons/weapon_knife.png'}
                         alt={selectedKnifeModel}
                         width={32}
-                        height={32}
+                        height={32} draggable={false}
                     />
                     <span>
                         {
@@ -507,7 +528,7 @@ const handleSaveWeapon = async (data) => {
 
                     }}
                 >
-                  <img src={knife.image} alt={knife.name} width={32} height={32} />
+                  <img src={knife.image} alt={knife.name} width={32} height={32} draggable={false}/>
                   <span>{knife.name.replace('weapon_', '').replace(/_/g, ' ')}</span>
                 </div>
               ))}
@@ -527,7 +548,7 @@ const handleSaveWeapon = async (data) => {
                 className="weapon-card"
                 onClick={() => handleWeaponClick(weapon)}
               >
-                <img src={weapon.image} alt={weapon.name} className="weapon-img" />
+                <img src={weapon.image} alt={weapon.name} className="weapon-img" draggable={false} />
                 <div className="weapon-name">{weapon.name}</div>
               </div>
             );

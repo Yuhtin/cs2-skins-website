@@ -24,14 +24,15 @@
 
 .weapon-customizer-header {
   width: 100dvw;
-  background-color: #1f1f1f;
+  background-color: rgba(31, 31, 31, 0.5);
   padding: 16px 24px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   font-size: 18px;
   font-weight: bold;
-  border-bottom: 1px solid #333;
+  border-bottom: 1px solid #33333350;
+  backdrop-filter: blur(2px);
 }
 
 .weapon-customizer-header button {
@@ -134,7 +135,6 @@
   box-sizing: border-box;
   overflow-y: auto;
   overflow-x: hidden;
-  max-height: calc(100dvh - 235px); /* Adjust based on header height */
 }
 /* nice scroll */
 .weapon-customizer-body::-webkit-scrollbar {
@@ -439,16 +439,17 @@
 }
 
 @media (max-height: 915px) {
-  .weapon-customizer-body .right-panel {
-    margin: 0;
-    border: none;
-
-  }
-  .weapon-customizer-body .right-panel .weapon-preview img {
-    max-width: 100%;
-    width: auto;
-    height: 150px;
-  }
+ body{
+    height: max-content;
+   max-height: max-content;
+   overflow-y: auto;
+   overflow-x: hidden;
+ }
+ .weapon-customizer-body {
+  overflow-y: hidden;
+  overflow-x: hidden;
+  max-height: max-content; /* Adjust based on header height */
+}
 }
 @media (max-width: 1000px){
   .sticker-preview span{
@@ -470,7 +471,7 @@
     font-weight: 600;
   }
 }
-@media (max-width: 715px) {
+@media (max-width: 815px) {
   .weapon-customizer-body {
     flex-direction: column;
   }

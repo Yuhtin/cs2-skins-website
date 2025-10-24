@@ -164,7 +164,7 @@
     "name": "knife_kukri",
     "image": "/weapons/weapon_knife_kukri.png",
     "category": "Knife",
-    "cs2_id": null,
+    "cs2_id": 526,
     "team": "Both"
   },
   {
