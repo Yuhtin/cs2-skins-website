@@ -23,6 +23,16 @@
   --color-success: #4ADE80;
   --color-danger: #F75E5E;
 
+  /* team-scoped tokens (runtime-switchable via [data-team="X"] selectors) */
+  --color-team-bg: #1A2332;
+  --color-team-surface: #243243;
+  --color-team-elevated: #2F4360;
+  --color-team-accent: #5BA3FF;
+  --color-team-accent-soft: rgba(91, 163, 255, 0.15);
+  --color-team-border: #3B5472;
+  --color-team-fg: #E8F1FF;
+  --color-team-muted: #9FB3D1;
+
   /* fonts */
   --font-sans: 'Inter Variable', 'Inter', system-ui, sans-serif;
   --font-display: 'Barlow Condensed', sans-serif;
@@ -76,4 +86,16 @@
   ::-webkit-scrollbar-thumb:hover {
     background: var(--color-border);
   }
+}
+
+/* T team theme — olive/gold (overrides team vars via data-team attribute) */
+[data-team="T"] {
+  --color-team-bg: #1F1C15;
+  --color-team-surface: #2B261A;
+  --color-team-elevated: #3E3522;
+  --color-team-accent: #D4A02A;
+  --color-team-accent-soft: rgba(212, 160, 42, 0.15);
+  --color-team-border: #554628;
+  --color-team-fg: #F5EFDA;
+  --color-team-muted: #C4B384;
 }

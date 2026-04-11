@@ -36,6 +36,18 @@
   "category.heavies": "Ciężkie",
   "category.equipment": "Wyposażenie",
 
+  "subgroup.starting_pistol": "Pistolet startowy",
+  "subgroup.other_pistol": "Inne pistolety",
+  "subgroup.smg": "Pistolety maszynowe",
+  "subgroup.mid_tier_rifle": "Średnie",
+  "subgroup.rifle": "Karabiny",
+  "subgroup.sniper": "Karabiny wyborowe",
+  "subgroup.shotgun": "Strzelby",
+  "subgroup.mg": "Karabiny maszynowe",
+
+  "loadout.equip_ct": "Wyposaż CT",
+  "loadout.equip_t": "Wyposaż T",
+
   "equipment.knife_ct": "Nóż (CT)",
   "equipment.knife_t": "Nóż (T)",
   "equipment.gloves_ct": "Rękawice (CT)",

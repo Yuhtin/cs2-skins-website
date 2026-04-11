@@ -36,6 +36,18 @@
   "category.heavies": "Pesadas",
   "category.equipment": "Equipamento",
 
+  "subgroup.starting_pistol": "Pistola inicial",
+  "subgroup.other_pistol": "Outras pistolas",
+  "subgroup.smg": "Submetralhadoras",
+  "subgroup.mid_tier_rifle": "Intermediários",
+  "subgroup.rifle": "Rifles",
+  "subgroup.sniper": "Rifles de precisão",
+  "subgroup.shotgun": "Escopetas",
+  "subgroup.mg": "Metralhadoras",
+
+  "loadout.equip_ct": "Equipar CT",
+  "loadout.equip_t": "Equipar T",
+
   "equipment.knife_ct": "Faca (CT)",
   "equipment.knife_t": "Faca (T)",
   "equipment.gloves_ct": "Luvas (CT)",

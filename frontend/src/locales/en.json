@@ -36,6 +36,18 @@
   "category.heavies": "Heavy",
   "category.equipment": "Equipment",
 
+  "subgroup.starting_pistol": "Starting Pistol",
+  "subgroup.other_pistol": "Other Pistols",
+  "subgroup.smg": "SMGs",
+  "subgroup.mid_tier_rifle": "Mid-tier",
+  "subgroup.rifle": "Rifles",
+  "subgroup.sniper": "Snipers",
+  "subgroup.shotgun": "Shotguns",
+  "subgroup.mg": "Machine Guns",
+
+  "loadout.equip_ct": "Equip CT",
+  "loadout.equip_t": "Equip T",
+
   "equipment.knife_ct": "Knife (CT)",
   "equipment.knife_t": "Knife (T)",
   "equipment.gloves_ct": "Gloves (CT)",
