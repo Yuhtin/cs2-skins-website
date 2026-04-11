@@ -55,6 +55,7 @@
   "equipment.gloves_t": "Gloves (T)",
   "equipment.agent_ct": "Agent (CT)",
   "equipment.agent_t": "Agent (T)",
+  "equipment.click_to_change": "Click to change",
 
   "editor.empty_title": "Pick a weapon",
   "editor.empty_subtitle": "Select a weapon from the arsenal to start customizing your loadout",

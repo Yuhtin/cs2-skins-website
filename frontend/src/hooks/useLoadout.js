@@ -57,6 +57,9 @@ export function useLoadout() {
       };
 
       // --- Map regular weapon skin rows ---
+      // Returns the rows NOT consumed (knife-paint rows get picked up separately
+      // by enrichKnifeWithPaint — knives are in KNIVES, not WEAPONS, so they'd
+      // otherwise be dropped and their paint data lost).
       const mapSkins = (rows, team) => {
         if (!Array.isArray(rows)) return;
         for (const row of rows) {
@@ -86,8 +89,39 @@ export function useLoadout() {
           image: `/weapons/${model}.png`,
         };
       };
-      const ctKnifeEnriched = enrichKnife(ctKnife);
-      const tKnifeEnriched = enrichKnife(tKnife);
+      // Merge knife paint data (wp_player_skins row with matching defindex) onto
+      // the base knife row so the editor can read wear/seed/paint/etc. and the
+      // preview can show the painted skin image instead of the default silhouette.
+      const enrichKnifeWithPaint = (knifeRow, skinRows) => {
+        const base = enrichKnife(knifeRow);
+        if (!base) return null;
+        if (!Array.isArray(skinRows)) return base;
+        const paintRow = skinRows.find(
+          (r) => Number(r.weapon_defindex) === Number(base.defindex),
+        );
+        if (!paintRow) return base;
+        const skin = paintRow.weapon_paint_id != null && Number(paintRow.weapon_paint_id) !== 0
+          ? getSkinByDefindexAndPaint(base.defindex, paintRow.weapon_paint_id)
+          : null;
+        return {
+          ...base,
+          weapon_defindex: base.defindex,
+          weapon_paint_id: paintRow.weapon_paint_id,
+          weapon_wear: paintRow.weapon_wear,
+          weapon_seed: paintRow.weapon_seed,
+          weapon_nametag: paintRow.weapon_nametag,
+          weapon_stattrak: paintRow.weapon_stattrak,
+          weapon_sticker_0: paintRow.weapon_sticker_0,
+          weapon_sticker_1: paintRow.weapon_sticker_1,
+          weapon_sticker_2: paintRow.weapon_sticker_2,
+          weapon_sticker_3: paintRow.weapon_sticker_3,
+          weapon_keychain: paintRow.weapon_keychain,
+          image: skin?.image || base.image,
+          paint_name: skin?.paint_name,
+        };
+      };
+      const ctKnifeEnriched = enrichKnifeWithPaint(ctKnife, ctSkins);
+      const tKnifeEnriched = enrichKnifeWithPaint(tKnife, tSkins);
       if (ctKnifeEnriched) next['knife_ct.CT'] = ctKnifeEnriched;
       if (tKnifeEnriched) next['knife_t.T'] = tKnifeEnriched;
 

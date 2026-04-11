@@ -1,101 +1,62 @@
-import { useState } from 'react';
+import { Swords, Hand, UserSquare2 } from 'lucide-react';
 import { useTranslation } from '../../hooks/useTranslation';
-import { useSelectedWeapon } from '../../hooks/useSelectedWeapon';
-import { AgentPickerDialog } from '../popups/AgentPickerDialog';
-import { KnifePickerDialog } from '../popups/KnifePickerDialog';
-import { GlovesPickerDialog } from '../popups/GlovesPickerDialog';
 
+// Compact 3-slot current-state rail shown beneath the character preview.
+// Clicking any slot calls onOpenPicker(slotType) — the parent routes to the
+// Equipment tab and opens the matching dialog.
 const SLOTS_CT = [
-  { internal: 'knife_ct',  slotType: 'knife',  team: 'CT', labelKey: 'equipment.knife_ct' },
-  { internal: 'ct_gloves', slotType: 'gloves', team: 'CT', labelKey: 'equipment.gloves_ct' },
-  { internal: 'ct_agent',  slotType: 'agent',  team: 'CT', labelKey: 'equipment.agent_ct' },
+  { slotType: 'knife',  labelKey: 'equipment.knife_ct',  keySuffix: 'knife_ct.CT',  icon: Swords },
+  { slotType: 'gloves', labelKey: 'equipment.gloves_ct', keySuffix: 'ct_gloves.CT', icon: Hand },
+  { slotType: 'agent',  labelKey: 'equipment.agent_ct',  keySuffix: 'ct_agent.CT',  icon: UserSquare2 },
 ];
 const SLOTS_T = [
-  { internal: 'knife_t',   slotType: 'knife',  team: 'T', labelKey: 'equipment.knife_t' },
-  { internal: 'tt_gloves', slotType: 'gloves', team: 'T', labelKey: 'equipment.gloves_t' },
-  { internal: 'tt_agent',  slotType: 'agent',  team: 'T', labelKey: 'equipment.agent_t' },
+  { slotType: 'knife',  labelKey: 'equipment.knife_t',  keySuffix: 'knife_t.T',    icon: Swords },
+  { slotType: 'gloves', labelKey: 'equipment.gloves_t', keySuffix: 'tt_gloves.T',  icon: Hand },
+  { slotType: 'agent',  labelKey: 'equipment.agent_t',  keySuffix: 'tt_agent.T',   icon: UserSquare2 },
 ];
 
-export function EquipmentRail({ team, loadout, onRefreshLoadout }) {
+export function EquipmentRail({ team, loadout, onOpenPicker }) {
   const { t } = useTranslation();
-  const { selectWeapon } = useSelectedWeapon();
-  const [activePicker, setActivePicker] = useState(null); // 'knife' | 'gloves' | 'agent' | null
-
   const slots = team === 'CT' ? SLOTS_CT : SLOTS_T;
-  const appliedKnife = loadout[team === 'CT' ? 'knife_ct.CT' : 'knife_t.T'];
-
-  // Opens the main EditorDrawer for editing the currently-applied knife's paint.
-  // Only meaningful when a knife model is already equipped.
-  const openKnifePaintEditor = () => {
-    if (!appliedKnife?.defindex) return;
-    setActivePicker(null);
-    selectWeapon({
-      internal: team === 'CT' ? 'knife_ct' : 'knife_t',
-      displayName: appliedKnife.displayName,
-      image: appliedKnife.image,
-      team,
-      category: 'equipment',
-      slotType: 'knife_paint',        // distinct from 'knife' so EditorPanel calls saveSkin
-      cs2Id: appliedKnife.defindex,    // required for SkinPicker to filter paints
-    });
-  };
 
   return (
-    <>
-      <div className="flex gap-2">
-        {slots.map((slot) => {
-          const applied = loadout[`${slot.internal}.${slot.team}`];
-          const imageSrc = applied?.image || `/weapons/${slot.slotType}_default.png`;
-          const label =
-            slot.slotType === 'knife' && applied?.displayName
-              ? applied.displayName
-              : slot.slotType === 'gloves' && applied?.paint_name
-              ? applied.paint_name.split('|').slice(1).join('|').trim() || t(slot.labelKey)
-              : slot.slotType === 'agent' && applied?.displayName
-              ? applied.displayName.split('|')[0].trim()
-              : t(slot.labelKey);
+    <div className="flex gap-2">
+      {slots.map((slot) => {
+        const applied = loadout[slot.keySuffix];
+        const Icon = slot.icon;
 
-          return (
-            <button
-              key={slot.internal}
-              type="button"
-              onClick={() => setActivePicker(slot.slotType)}
-              className="flex-1 aspect-square bg-team-bg border-2 border-team-border rounded-md p-2 flex flex-col items-center justify-center gap-1 hover:border-team-accent transition-colors"
-            >
+        const label =
+          slot.slotType === 'knife' && applied?.displayName
+            ? applied.displayName
+            : slot.slotType === 'gloves' && applied?.paint_name
+            ? applied.paint_name.split('|').slice(1).join('|').trim() || t(slot.labelKey)
+            : slot.slotType === 'agent' && applied?.displayName
+            ? applied.displayName.split('|')[0].trim()
+            : t(slot.labelKey);
+
+        return (
+          <button
+            key={slot.slotType}
+            type="button"
+            onClick={() => onOpenPicker(slot.slotType)}
+            className="flex-1 aspect-square bg-team-bg border-2 border-team-border rounded-md p-2 flex flex-col items-center justify-center gap-1 hover:border-team-accent transition-colors"
+          >
+            {applied?.image ? (
               <img
-                src={imageSrc}
+                src={applied.image}
                 alt={label}
                 className="max-w-full max-h-[60%] object-contain"
                 draggable={false}
               />
-              <span className="text-[10px] font-semibold uppercase tracking-wider text-team-muted truncate w-full text-center">
-                {label}
-              </span>
-            </button>
-          );
-        })}
-      </div>
-
-      <AgentPickerDialog
-        open={activePicker === 'agent'}
-        team={team}
-        onClose={() => setActivePicker(null)}
-        onSaved={onRefreshLoadout}
-      />
-      <KnifePickerDialog
-        open={activePicker === 'knife'}
-        team={team}
-        appliedKnife={appliedKnife}
-        onClose={() => setActivePicker(null)}
-        onSaved={onRefreshLoadout}
-        onEditPaint={openKnifePaintEditor}
-      />
-      <GlovesPickerDialog
-        open={activePicker === 'gloves'}
-        team={team}
-        onClose={() => setActivePicker(null)}
-        onSaved={onRefreshLoadout}
-      />
-    </>
+            ) : (
+              <Icon size={28} className="text-team-border/60" strokeWidth={1.5} />
+            )}
+            <span className="text-[10px] font-semibold uppercase tracking-wider text-team-muted truncate w-full text-center">
+              {label}
+            </span>
+          </button>
+        );
+      })}
+    </div>
   );
 }

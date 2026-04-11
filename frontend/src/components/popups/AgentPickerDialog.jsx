@@ -1,16 +1,14 @@
 import * as Dialog from '@radix-ui/react-dialog';
 import { useEffect, useMemo, useState } from 'react';
-import { Search, X } from 'lucide-react';
+import { X } from 'lucide-react';
 import { toast } from 'sonner';
 import { useTranslation } from '../../hooks/useTranslation';
-import { Input } from '../ui/Input';
 import { ensureAgentCatalog } from '../../lib/agents';
 import { saveAgent } from '../../lib/api';
 
 export function AgentPickerDialog({ open, team, onClose, onSaved }) {
   const { t } = useTranslation();
   const [catalog, setCatalog] = useState([]);
-  const [search, setSearch] = useState('');
   const [isSaving, setIsSaving] = useState(false);
 
   // team is 'CT' or 'T'; catalog stores team as 3 (CT) or 2 (T).
@@ -21,11 +19,8 @@ export function AgentPickerDialog({ open, team, onClose, onSaved }) {
   }, [open]);
 
   const filtered = useMemo(() => {
-    const byTeam = catalog.filter((a) => a.team === teamNum);
-    if (!search) return byTeam;
-    const q = search.toLowerCase();
-    return byTeam.filter((a) => (a.agent_name || '').toLowerCase().includes(q));
-  }, [catalog, teamNum, search]);
+    return catalog.filter((a) => a.team === teamNum);
+  }, [catalog, teamNum]);
 
   const handlePick = async (agent) => {
     setIsSaving(true);
@@ -57,18 +52,6 @@ export function AgentPickerDialog({ open, team, onClose, onSaved }) {
             <Dialog.Close className="h-9 w-9 flex items-center justify-center rounded-md text-muted hover:text-fg hover:bg-surface">
               <X size={18} />
             </Dialog.Close>
-          </div>
-          <div className="p-4 border-b border-subtle">
-            <div className="relative">
-              <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-faint" />
-              <Input
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                placeholder={t('header.search_placeholder')}
-                className="pl-9"
-                autoFocus
-              />
-            </div>
           </div>
           <div className="flex-1 overflow-y-auto p-4">
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">

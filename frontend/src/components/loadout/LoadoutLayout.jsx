@@ -1,15 +1,24 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { CategoryRail } from './CategoryRail';
 import { WeaponGroup } from './WeaponGroup';
 import { CharacterPreview } from './CharacterPreview';
+import { EquipmentSection } from './EquipmentSection';
+import { AgentPickerDialog } from '../popups/AgentPickerDialog';
+import { KnifePickerDialog } from '../popups/KnifePickerDialog';
+import { GlovesPickerDialog } from '../popups/GlovesPickerDialog';
 import { useTranslation } from '../../hooks/useTranslation';
-import { getWeaponsBySection, WEAPONS } from '../../lib/weapons';
+import { useSelectedWeapon } from '../../hooks/useSelectedWeapon';
+import { WEAPONS } from '../../lib/weapons';
 
 // Single-team loadout view: category rail | weapon groups | character preview
 // Wrapping div has data-team attribute to activate team theme tokens.
 export function LoadoutLayout({ team, loadout, onRefreshLoadout }) {
   const { t } = useTranslation();
+  const { selectWeapon } = useSelectedWeapon();
   const [activeCategory, setActiveCategory] = useState('pistols');
+  // activePicker lives here so the compact side rail AND the EquipmentSection
+  // main-area view can share the same dialog set.
+  const [activePicker, setActivePicker] = useState(null); // 'knife' | 'gloves' | 'agent' | null
   const scrollContainerRef = useRef(null);
 
   // Combine team-specific + shared weapons into the current team's view.
@@ -25,11 +34,30 @@ export function LoadoutLayout({ team, loadout, onRefreshLoadout }) {
     }
   };
 
-  // Filter weapons to the active category (equipment is handled separately in CharacterPreview)
+  // Filter weapons to the active category (equipment is handled separately)
   const currentCategoryWeapons =
     activeCategory === 'equipment'
       ? []
       : teamWeapons.filter((w) => w.category === activeCategory);
+
+  const appliedKnife = loadout[team === 'CT' ? 'knife_ct.CT' : 'knife_t.T'];
+
+  // Opens the main EditorDrawer for editing a knife's paint. Accepts either
+  // the currently-applied knife (from EquipmentRail/EditPaint button) or a
+  // freshly-picked knife (from KnifePickerDialog's onPickThenEdit).
+  const openKnifePaintEditor = (knifeMeta) => {
+    if (!knifeMeta?.defindex) return;
+    setActivePicker(null);
+    selectWeapon({
+      internal: team === 'CT' ? 'knife_ct' : 'knife_t',
+      displayName: knifeMeta.displayName,
+      image: knifeMeta.image || `/weapons/weapon_${knifeMeta.internal}.png`,
+      team,
+      category: 'equipment',
+      slotType: 'knife_paint',        // distinct from 'knife' so EditorPanel calls saveSkin
+      cs2Id: knifeMeta.defindex,       // required for SkinPicker to filter paints
+    });
+  };
 
   return (
     <div
@@ -64,9 +92,11 @@ export function LoadoutLayout({ team, loadout, onRefreshLoadout }) {
       />
       <main ref={scrollContainerRef} className="flex-1 p-8 overflow-y-auto max-h-[calc(100vh-140px)] min-h-[600px]">
         {activeCategory === 'equipment' ? (
-          <div className="text-center text-team-muted py-12">
-            <p className="text-sm">Equipment shown in the character panel →</p>
-          </div>
+          <EquipmentSection
+            team={team}
+            loadout={loadout}
+            onOpenPicker={setActivePicker}
+          />
         ) : (
           <WeaponGroup
             weapons={currentCategoryWeapons}
@@ -76,8 +106,39 @@ export function LoadoutLayout({ team, loadout, onRefreshLoadout }) {
         )}
       </main>
       <aside className="flex-shrink-0 w-[340px] p-6 border-l-2 border-team-border bg-gradient-to-b from-team-surface via-team-bg to-team-bg shadow-[inset_8px_0_24px_rgba(0,0,0,0.4)]">
-        <CharacterPreview team={team} loadout={loadout} onRefreshLoadout={onRefreshLoadout} />
+        <CharacterPreview
+          team={team}
+          loadout={loadout}
+          onOpenPicker={(slotType) => {
+            // Clicking a slot in the small rail: navigate to the Equipment tab
+            // AND open the matching modal in one step.
+            setActiveCategory('equipment');
+            setActivePicker(slotType);
+          }}
+        />
       </aside>
+
+      <AgentPickerDialog
+        open={activePicker === 'agent'}
+        team={team}
+        onClose={() => setActivePicker(null)}
+        onSaved={onRefreshLoadout}
+      />
+      <KnifePickerDialog
+        open={activePicker === 'knife'}
+        team={team}
+        appliedKnife={appliedKnife}
+        onClose={() => setActivePicker(null)}
+        onSaved={onRefreshLoadout}
+        onEditPaint={() => openKnifePaintEditor(appliedKnife)}
+        onPickThenEdit={(knifeFromPicker) => openKnifePaintEditor(knifeFromPicker)}
+      />
+      <GlovesPickerDialog
+        open={activePicker === 'gloves'}
+        team={team}
+        onClose={() => setActivePicker(null)}
+        onSaved={onRefreshLoadout}
+      />
     </div>
   );
 }

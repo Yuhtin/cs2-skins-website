@@ -7,7 +7,7 @@ import { KNIVES } from '../../lib/weapons';
 import { saveKnife } from '../../lib/api';
 import { Button } from '../ui/Button';
 
-export function KnifePickerDialog({ open, team, appliedKnife, onClose, onSaved, onEditPaint }) {
+export function KnifePickerDialog({ open, team, appliedKnife, onClose, onSaved, onEditPaint, onPickThenEdit }) {
   const { t } = useTranslation();
   const [isSaving, setIsSaving] = useState(false);
 
@@ -17,7 +17,16 @@ export function KnifePickerDialog({ open, team, appliedKnife, onClose, onSaved, 
       await saveKnife({ team, knife: knife.internal });
       toast.success(t('toast.save_success'));
       onSaved();
-      onClose();
+      // Auto-open the paint editor for the just-picked knife. The parent
+      // helper closes this dialog and opens the EditorDrawer via selectWeapon.
+      if (onPickThenEdit) {
+        onPickThenEdit({
+          ...knife,
+          image: `/weapons/weapon_${knife.internal}.png`,
+        });
+      } else {
+        onClose();
+      }
     } catch (err) {
       toast.error(t('toast.save_error', { error: err.message }));
     } finally {
