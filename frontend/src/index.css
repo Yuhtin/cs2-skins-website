@@ -1,38 +1,79 @@
-:root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  font-weight: 400;
-  font-size: 16px;
+@import "tailwindcss";
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+@import "@fontsource-variable/inter";
+@import "@fontsource/barlow-condensed/400.css";
+@import "@fontsource/barlow-condensed/600.css";
+@import "@fontsource/barlow-condensed/700.css";
+@import "@fontsource/jetbrains-mono";
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@theme {
+  /* colors */
+  --color-bg: #0B0F17;
+  --color-surface: #141A26;
+  --color-elevated: #1C2436;
+  --color-subtle: #2A3349;
+  --color-border: #3B4A6B;
+
+  --color-fg: #EEF2FA;
+  --color-muted: #8A97B0;
+  --color-faint: #5A6885;
+
+  --color-accent: #F29E38;
+  --color-accent2: #5BA3FF;
+  --color-success: #4ADE80;
+  --color-danger: #F75E5E;
+
+  /* fonts */
+  --font-sans: 'Inter Variable', 'Inter', system-ui, sans-serif;
+  --font-display: 'Barlow Condensed', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  /* spacing — extends Tailwind v4 defaults (xs/sm/md/lg/xl/2xl/3xl already defined) */
+  --spacing-4xl: 4rem;
+
+  /* shadows */
+  --shadow-card: 0 2px 8px rgba(8, 12, 24, 0.6);
+  --shadow-elevated: 0 8px 24px rgba(8, 12, 24, 0.7);
+  --shadow-glow: 0 0 0 2px var(--color-accent), 0 0 20px rgba(242, 158, 56, 0.3);
+
+  /* radii */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
 }
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
 
+@layer base {
+  html, body {
+    background: linear-gradient(180deg, #0B0F17 0%, #0E1424 100%);
+    background-attachment: fixed;
+    color: var(--color-fg);
+    font-family: var(--font-sans);
+    font-size: 14px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
 
-html, body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-}
+  * {
+    box-sizing: border-box;
+  }
 
-body {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 100dvw;
-  min-height: 100dvh;
-  max-width: 100dvw;
-  max-height: 100dvh;
-  background-color: #0f0f0f;
-  font-family: sans-serif;
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--color-bg);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-subtle);
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-border);
+  }
 }
