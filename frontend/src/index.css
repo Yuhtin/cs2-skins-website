@@ -38,9 +38,6 @@
   --font-display: 'Barlow Condensed', sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
 
-  /* spacing — extends Tailwind v4 defaults (xs/sm/md/lg/xl/2xl/3xl already defined) */
-  --spacing-4xl: 4rem;
-
   /* shadows */
   --shadow-card: 0 2px 8px rgba(8, 12, 24, 0.6);
   --shadow-elevated: 0 8px 24px rgba(8, 12, 24, 0.7);
