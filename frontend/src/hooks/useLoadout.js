@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { getSkins, getKnife, getGloves, getAgent } from '../lib/api';
 import { getWeaponByDefindex } from '../lib/weapons';
 import { ensureSkinCatalog, getSkinByDefindexAndPaint } from '../lib/skins';
+import { ensureRarityCatalog, getRarityColor } from '../lib/rarity';
 
 // Loads and caches the full user loadout for both teams.
 // Returns a map keyed by `${weaponInternal}.${team}` → skin row.
@@ -35,6 +36,7 @@ export function useLoadout() {
         getAgent('CT').catch(() => null),
         getAgent('T').catch(() => null),
         ensureSkinCatalog(),
+        ensureRarityCatalog(),
       ]);
 
       const next = {};
@@ -45,8 +47,13 @@ export function useLoadout() {
         const paint = row.weapon_paint_id;
         if (paint == null || Number(paint) === 0) return row; // default paint, no enrichment
         const skin = getSkinByDefindexAndPaint(row.weapon_defindex, paint);
-        if (!skin) return row;
-        return { ...row, image: skin.image, paint_name: skin.paint_name };
+        const rarityColor = getRarityColor(row.weapon_defindex, paint);
+        if (!skin && !rarityColor) return row;
+        return {
+          ...row,
+          ...(skin && { image: skin.image, paint_name: skin.paint_name }),
+          ...(rarityColor && { rarity_color: rarityColor }),
+        };
       };
 
       // Map skin rows keyed by weapon internal name.

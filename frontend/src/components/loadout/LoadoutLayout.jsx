@@ -33,7 +33,9 @@ export function LoadoutLayout({ team, loadout }) {
 
   return (
     <div
+      key={team}
       data-team={team}
+      style={{ animation: 'team-fade-in 300ms ease-out' }}
       className="relative flex bg-team-bg rounded-xl border-2 border-team-border overflow-hidden shadow-[0_12px_48px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.04)] min-h-[640px]"
     >
       {/* Team-accent glow stripe at the top */}
