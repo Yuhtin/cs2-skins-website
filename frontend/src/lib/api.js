@@ -14,14 +14,12 @@ function toForm(params) {
 }
 
 // Shared fetch wrapper: JSON response, credentials included, error normalization.
-async function request(path, options = {}) {
+async function post(path, params) {
   const res = await fetch(`${API}${path}`, {
+    method: 'POST',
     credentials: 'include',
-    ...options,
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      ...(options.headers || {}),
-    },
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: toForm(params),
   });
   let data;
   try {
@@ -29,36 +27,67 @@ async function request(path, options = {}) {
   } catch {
     throw new Error(`${res.status} ${res.statusText}`);
   }
-  if (data.error) throw new Error(data.error);
+  if (data && typeof data === 'object' && data.error) throw new Error(data.error);
+  return data;
+}
+
+async function get(path) {
+  const res = await fetch(`${API}${path}`, {
+    credentials: 'include',
+    headers: { 'Accept': 'application/json' },
+  });
+  let data;
+  try {
+    data = await res.json();
+  } catch {
+    throw new Error(`${res.status} ${res.statusText}`);
+  }
+  if (data && typeof data === 'object' && data.error) throw new Error(data.error);
   return data;
 }
 
 export function getUserProfile() {
-  return request('/getUserProfile.php');
+  return get('/getUserProfile.php');
 }
 
+// Returns an array of skin rows for the given team.
 export function getSkins(team) {
-  return request(`/skins.php?team=${encodeURIComponent(team)}&type=skins`);
+  return post('/skins.php', { action: 'getall', team });
 }
 
+// Returns { knife: 'weapon_xxx' }
 export function getKnife(team) {
-  return request(`/skins.php?team=${encodeURIComponent(team)}&type=knife`);
+  return post('/knife.php', { action: 'get', team });
 }
 
+// Returns current gloves data (shape depends on backend)
 export function getGloves(team) {
-  return request(`/skins.php?team=${encodeURIComponent(team)}&type=gloves`);
+  return post('/skins.php', { action: 'gloves_addon_data', team });
 }
 
+// Returns current agent data
 export function getAgent(team) {
-  return request(`/skins.php?team=${encodeURIComponent(team)}&type=agent`);
+  return post('/skins.php', { action: 'agent_get', team });
 }
 
+// Save a single skin. Caller provides action-compatible params.
 export function saveSkin(params) {
-  return request('/skins.php', { method: 'POST', body: toForm(params) });
+  return post('/skins.php', { action: 'save', ...params });
 }
 
+// Save knife. team required; knife is weapon name string.
 export function saveKnife(params) {
-  return request('/knife.php', { method: 'POST', body: toForm(params) });
+  return post('/knife.php', { action: 'set', ...params });
+}
+
+// Save agent
+export function saveAgent(params) {
+  return post('/skins.php', { action: 'agent_save', ...params });
+}
+
+// Save gloves
+export function saveGloves(params) {
+  return post('/skins.php', { action: 'gloves_save', ...params });
 }
 
 export function logout() {

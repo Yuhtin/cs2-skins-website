@@ -112,3 +112,13 @@ export function groupByCategory(weapons) {
   }
   return grouped;
 }
+
+export function getWeaponByDefindex(defindex) {
+  const n = Number(defindex);
+  return WEAPONS.find((w) => w.cs2Id === n) ?? null;
+}
+
+export function getKnifeByDefindex(defindex) {
+  const n = Number(defindex);
+  return KNIVES.find((k) => k.defindex === n) ?? null;
+}

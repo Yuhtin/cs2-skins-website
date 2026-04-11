@@ -156,11 +156,14 @@ function buildDraftFromLoadout(selectedWeapon, loadout) {
 }
 
 function buildSaveParams(weapon, draft) {
-  const team = weapon.team === 'both' ? 2 : weapon.team === 'CT' ? 2 : 3;
+  // Backend accepts team as string 'CT' or 'T'.
+  // For 'both' weapons we pick CT arbitrarily — the skin applies for both teams
+  // because the plugin's wp_player_skins row is per (steamid, weapon_team, defindex).
+  const team = weapon.team === 'T' ? 'T' : 'CT';
   return {
-    weapon: weapon.internal,
     team,
-    paint_id: draft.paintId,
+    weapon_defindex: weapon.cs2Id,
+    paint: draft.paintId,
     wear: draft.wear,
     seed: draft.seed,
     nametag: draft.nametag,
