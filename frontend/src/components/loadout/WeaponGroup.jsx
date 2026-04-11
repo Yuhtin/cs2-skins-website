@@ -20,16 +20,17 @@ export function WeaponGroup({ weapons, categoryId, loadout }) {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-10">
       {groups.map((group) => (
         <section key={group.subgroupId}>
-          <div className="flex items-center gap-3 mb-3">
-            <h3 className="font-display font-bold text-xs uppercase tracking-[0.2em] text-team-accent">
+          <div className="flex items-center gap-4 mb-5">
+            <div className="h-[2px] w-6 bg-team-accent" />
+            <h3 className="font-display font-bold text-sm uppercase tracking-[0.25em] text-team-accent whitespace-nowrap">
               {t(group.labelKey)}
             </h3>
             <div className="flex-1 h-px bg-team-border" />
           </div>
-          <div className="flex flex-wrap gap-3">
+          <div className="flex flex-wrap gap-4">
             {group.weapons.map((weapon) => {
               const applied = loadout[`${weapon.internal}.${weapon.team === 'both' ? 'CT' : weapon.team}`]
                 || loadout[`${weapon.internal}.T`]

@@ -14,7 +14,7 @@ export function CharacterPreview({ team, loadout }) {
 
   return (
     <div className="flex flex-col gap-4 w-full">
-      <div className="relative flex-1 bg-gradient-to-b from-team-bg to-team-surface border border-team-border rounded-xl overflow-hidden flex items-center justify-center min-h-[360px] shadow-[inset_0_0_40px_rgba(0,0,0,0.6)]">
+      <div className="relative flex-1 bg-gradient-to-b from-team-surface via-team-bg to-[#000] border-2 border-team-border rounded-xl overflow-hidden flex items-center justify-center min-h-[400px] shadow-[inset_0_0_80px_rgba(0,0,0,0.8),inset_0_0_0_1px_var(--color-team-accent-soft)]">
         {/* Subtle radial highlight behind character */}
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_40%,var(--color-team-accent-soft),transparent_60%)] pointer-events-none" />
         <img

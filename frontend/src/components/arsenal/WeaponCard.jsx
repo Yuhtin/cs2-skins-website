@@ -5,7 +5,7 @@ export function WeaponCard({ weapon, appliedSkin, isSelected, onClick, variant =
   const sizeClasses =
     variant === 'equipment'
       ? 'w-[200px] h-[180px]'
-      : 'w-[140px] h-[110px]';
+      : 'w-[160px] h-[130px]';
 
   const imageSrc = appliedSkin?.image || weapon.image;
   const customSkinName = appliedSkin?.paint_name ? appliedSkin.paint_name.split('|').slice(1).join('|').trim() : null;
@@ -17,11 +17,11 @@ export function WeaponCard({ weapon, appliedSkin, isSelected, onClick, variant =
       className={clsx(
         'relative group',
         sizeClasses,
-        'bg-surface border rounded-md p-2 flex flex-col items-center justify-between',
-        'transition-all duration-150',
+        'bg-team-surface border-2 rounded-md p-3 flex flex-col items-center justify-between',
+        'transition-all duration-200',
         isSelected
-          ? 'border-accent shadow-glow'
-          : 'border-subtle hover:border-border hover:-translate-y-0.5 hover:shadow-card',
+          ? 'border-team-accent shadow-[0_0_0_1px_var(--color-team-accent),0_0_24px_var(--color-team-accent-soft)]'
+          : 'border-team-border hover:border-team-accent hover:-translate-y-0.5 hover:shadow-[0_8px_20px_rgba(0,0,0,0.4)]',
       )}
       aria-pressed={isSelected}
     >
@@ -38,14 +38,14 @@ export function WeaponCard({ weapon, appliedSkin, isSelected, onClick, variant =
       <div className="w-full text-center mt-1">
         <div
           className={clsx(
-            'font-semibold text-xs truncate',
-            isSelected ? 'text-accent' : 'text-fg',
+            'font-semibold text-sm truncate',
+            isSelected ? 'text-team-accent' : 'text-team-fg',
           )}
         >
           {highlightMatch(weapon.displayName, searchHighlight)}
         </div>
         {customSkinName && (
-          <div className="text-[10px] text-muted truncate">{customSkinName}</div>
+          <div className="text-[11px] text-team-muted truncate">{customSkinName}</div>
         )}
       </div>
     </button>

@@ -10,8 +10,10 @@ import { useLoadout } from '../hooks/useLoadout';
 import { SelectedWeaponProvider } from '../hooks/useSelectedWeapon';
 import { TooltipProvider } from '../components/ui/Tooltip';
 import { useKeyboardShortcuts } from '../hooks/useKeyboardShortcuts';
+import { useTranslation } from '../hooks/useTranslation';
 
 export function LoadoutPage({ user }) {
+  const { t } = useTranslation();
   const { loadout, refresh } = useLoadout();
   const [currentTeam, setCurrentTeam] = useState('CT'); // 'CT' | 'T'
   const [stickerPicker, setStickerPicker] = useState({ open: false, slotIndex: 0, draft: null, updateField: null });
@@ -41,10 +43,13 @@ export function LoadoutPage({ user }) {
         <div className="min-h-screen">
           <Header user={user} />
           <div className="max-w-[1600px] mx-auto px-6 py-6">
-            <div className="flex items-center justify-between mb-6">
-              <h1 className="font-display font-bold text-2xl uppercase tracking-wider text-fg">
-                Loadout
-              </h1>
+            <div className="flex items-center justify-between mb-8">
+              <div>
+                <h1 className="font-display font-black text-4xl uppercase tracking-[0.1em] text-fg leading-none">
+                  Loadout
+                </h1>
+                <p className="text-xs text-faint uppercase tracking-[0.3em] mt-1">{t('loadout.subtitle')}</p>
+              </div>
               <TeamToggle team={currentTeam} onChange={setCurrentTeam} />
             </div>
             <LoadoutLayout team={currentTeam} loadout={loadout} />

@@ -32,13 +32,18 @@ export function LoadoutLayout({ team, loadout }) {
       : teamWeapons.filter((w) => w.category === activeCategory);
 
   return (
-    <div data-team={team} className="flex bg-team-bg rounded-xl border border-team-border overflow-hidden shadow-[0_8px_32px_rgba(0,0,0,0.4)]">
+    <div
+      data-team={team}
+      className="relative flex bg-team-bg rounded-xl border-2 border-team-border overflow-hidden shadow-[0_12px_48px_rgba(0,0,0,0.6),inset_0_1px_0_rgba(255,255,255,0.04)] min-h-[640px]"
+    >
+      {/* Team-accent glow stripe at the top */}
+      <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-team-accent to-transparent opacity-60 pointer-events-none" />
       <CategoryRail
         activeCategory={activeCategory}
         onSelectCategory={handleSelectCategory}
         t={t}
       />
-      <main ref={scrollContainerRef} className="flex-1 p-6 overflow-y-auto max-h-[calc(100vh-120px)] min-h-[600px]">
+      <main ref={scrollContainerRef} className="flex-1 p-8 overflow-y-auto max-h-[calc(100vh-140px)] min-h-[600px]">
         {activeCategory === 'equipment' ? (
           <div className="text-center text-team-muted py-12">
             <p className="text-sm">Equipment shown in the character panel →</p>
@@ -51,7 +56,7 @@ export function LoadoutLayout({ team, loadout }) {
           />
         )}
       </main>
-      <aside className="flex-shrink-0 w-[320px] p-6 border-l border-team-border bg-gradient-to-b from-team-surface to-team-bg">
+      <aside className="flex-shrink-0 w-[340px] p-6 border-l-2 border-team-border bg-gradient-to-b from-team-surface via-team-bg to-team-bg shadow-[inset_8px_0_24px_rgba(0,0,0,0.4)]">
         <CharacterPreview team={team} loadout={loadout} />
       </aside>
     </div>

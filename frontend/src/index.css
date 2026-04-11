@@ -55,7 +55,9 @@
 
 @layer base {
   html, body {
-    background: linear-gradient(180deg, #0B0F17 0%, #0E1424 100%);
+    background:
+      repeating-linear-gradient(135deg, transparent, transparent 14px, rgba(255,255,255,0.008) 14px, rgba(255,255,255,0.008) 15px),
+      linear-gradient(180deg, #0B0F17 0%, #0E1424 100%);
     background-attachment: fixed;
     color: var(--color-fg);
     font-family: var(--font-sans);

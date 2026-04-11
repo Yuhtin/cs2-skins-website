@@ -38,8 +38,8 @@ export function EquipmentRail({ team, loadout }) {
             onClick={() => selectWeapon(pseudoWeapon)}
             className={
               isSelected
-                ? 'flex-1 aspect-square bg-team-bg border-2 border-team-accent rounded-md p-2 flex flex-col items-center justify-center gap-1'
-                : 'flex-1 aspect-square bg-team-bg border border-team-border rounded-md p-2 flex flex-col items-center justify-center gap-1 hover:border-team-accent transition-colors'
+                ? 'flex-1 aspect-square bg-team-bg border-2 border-team-accent rounded-md p-2 flex flex-col items-center justify-center gap-1 shadow-[0_0_20px_var(--color-team-accent-soft)]'
+                : 'flex-1 aspect-square bg-team-bg border-2 border-team-border rounded-md p-2 flex flex-col items-center justify-center gap-1 hover:border-team-accent transition-colors'
             }
           >
             <img
