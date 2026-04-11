@@ -97,3 +97,9 @@ export function logout() {
 export function loginWithSteam() {
   window.location.href = `${API}/login-steam.php`;
 }
+
+// Log in with a 6-character code obtained from the CS2 server chat (`!skins` command).
+// Success sets the PHP session cookie; caller should reload the page to pick up the new user.
+export function loginWithCode(code) {
+  return post('/login-code.php', { code });
+}
