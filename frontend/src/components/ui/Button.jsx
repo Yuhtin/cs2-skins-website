@@ -1,4 +1,5 @@
 import clsx from 'clsx';
+import { twMerge } from 'tailwind-merge';
 
 const VARIANTS = {
   primary: 'bg-accent text-bg hover:bg-accent/90 active:bg-accent/80',
@@ -22,11 +23,13 @@ export function Button({
 }) {
   return (
     <button
-      className={clsx(
-        'inline-flex items-center justify-center gap-2 rounded-md font-semibold transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-accent2/50 disabled:opacity-50 disabled:cursor-not-allowed',
-        VARIANTS[variant],
-        SIZES[size],
-        className,
+      className={twMerge(
+        clsx(
+          'inline-flex items-center justify-center gap-2 rounded-md font-semibold transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-accent2/50 disabled:opacity-50 disabled:cursor-not-allowed',
+          VARIANTS[variant],
+          SIZES[size],
+          className,
+        ),
       )}
       {...rest}
     >

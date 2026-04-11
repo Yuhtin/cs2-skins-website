@@ -48,7 +48,7 @@ export function Header({ user, search, onSearchChange }) {
               >
                 <img
                   src={user.avatar}
-                  alt="avatar"
+                  alt={user.personaname}
                   width={28}
                   height={28}
                   className="rounded-full border border-subtle"
