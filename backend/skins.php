@@ -55,7 +55,7 @@ switch ($action) {
         case 'save':
             $weapon_defindex = $_POST['weapon_defindex'] ?? '';
             $paint = $_POST['paint'] ?? 0;
-            $wear = $_POST['wear'] ?? 0;
+            $wear = floatval(str_replace(',', '.', $_POST['wear'] ?? '0'));
             $seed = $_POST['seed'] ?? 0;
             $nametag = $_POST['nametag'] ?? null;
             $stattrak = $_POST['stattrak'] ?? 0;
@@ -208,7 +208,7 @@ switch ($action) {
     case 'gloves_save':
         $weapon_defindex = $_POST['weapon_defindex'] ?? '';
         $paint = $_POST['paint'] ?? 0;
-        $wear = $_POST['wear'] ?? 0;
+        $wear = floatval(str_replace(',', '.', $_POST['wear'] ?? '0'));
         $seed = $_POST['seed'] ?? 0;
         //check if gloves already exist for this steamid and team in wp_player_gloves
         $stmt = $db->prepare("SELECT COUNT(*) FROM wp_player_gloves WHERE steamid = ? AND weapon_team = ?");
