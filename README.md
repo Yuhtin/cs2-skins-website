@@ -1,129 +1,90 @@
-# 🎮 CS2 Weapon Customizer (SKIN CHANGER WEBSITE FOR WEAPON PAINT PLUGIN)
-## This website is build with React + Vite and PHP for backend so its super fast 
+# cs2-skins-website
 
-A modern, React-powered web app for **customizing Counter-Strike 2 weapon skins**, stickers, nametags and keychains. Includes a full PHP backend with Steam login and MySQL storage.
+Open-source web panel for the [cs2-WeaponPaints](https://github.com/Nereziel/cs2-WeaponPaints) CounterStrikeSharp plugin. Customize your CS2 loadout (skins, wear, stickers, keychains, knives, gloves, agents) from a browser, with preferences saved per Steam account and applied server-side by the WeaponPaints plugin.
 
-> 🧪 Educational project — use at your own risk.
+**Live demo:** [skins.daviduarte.com.br](https://skins.daviduarte.com.br)
 
----
+## Screenshots
 
-## 📢 What is this?
+_Screenshots will be added in the next release pass._
 
-This is an **enhanced and extended version** of [cs2-WeaponPaints by Nereziel](https://github.com/Nereziel/cs2-WeaponPaints), redesigned as a complete **full-stack platform**:
+## Features
 
-- Uses the original **weapon/sticker/keychain data** and images from Nereziel's repo.
-- Fully supports the **[CounterStrikeSharp Weapon Paint Plugin](https://github.com/Nereziel/cs2-WeaponPaints/tree/main/server)** for CS2 servers.
-- Backend-ready — stores skins per Steam ID, with team (T/CT) separation.
-- Designed for server-side skin injection and syncing player preferences.
-- Built to be fast, responsive and easy to customize.
+- Single-screen loadout editor with CT / T / Shared / Equipment sections all visible at once
+- Inline weapon editing in a sticky sidebar (no modal popups blocking the arsenal)
+- Correct CS2 in-game weapon names (M4A4, M4A1-S, Five-SeveN, USP-S, Zeus x27, etc — no more raw internal codes)
+- Customized-state indicators on weapon cards
+- Skin picker with search and live preview
+- Wear slider with Factory New → Battle-Scarred tier coloring
+- Pattern seed input with randomize
+- Nametag and StatTrak support
+- 4 sticker slots per weapon
+- Keychain slot with offset X/Y
+- Internationalization: English, Portuguese (BR), Polish — more welcome via PRs
+- Mobile responsive with bottom-sheet editor
+- CS2-inspired dark theme (no Valve assets reproduced)
+- Steam OpenID authentication
 
----
+## Requirements
 
-## 🚀 Features
+- **Server:** PHP 8.2+ with PDO MySQL extension, any modern web server (Apache/Nginx)
+- **Database:** MySQL 8 — the same one used by the [cs2-WeaponPaints plugin](https://github.com/Nereziel/cs2-WeaponPaints). No schema changes required.
+- **Build:** Node 20+ (only for building the frontend; not needed at runtime)
+- **Steam Web API Key:** [register one](https://steamcommunity.com/dev/apikey) for Steam OpenID login
 
-- 🧩 Select skins, wear, seed, nametag
-- 🎨 Choose 4 stickers with real previews
-- 🔑 Assign keychains and control offset
-- 🧠 Automatically saves to your Steam-linked database profile
-- 🛠️ Works with CS2 WeaponPaint plugin for server skin injection
+## Quick start
 
----
-## 🖥 Screenshots
-<img width="1327" height="1076" alt="{93C08B69-A1E7-4756-B014-69D8D943CB60}" src="https://github.com/user-attachments/assets/4dfd099e-e8a8-441d-b468-f54f0a6dd391" />
-<img width="1262" height="885" alt="{3B1D71E3-FAE8-473B-A93B-9DE7984DBDF7}" src="https://github.com/user-attachments/assets/d6023847-9835-4c1b-9fdc-fa565474e2db" />
-<img width="1304" height="1024" alt="{D142B961-4FD2-4BB9-9A7F-819C1634E3DB}" src="https://github.com/user-attachments/assets/ccbf4117-7c19-4d7d-b88d-f989e6b81ce2" />
-<img width="1959" height="1367" alt="{EB4E2F8F-BBE5-4DD8-9B5A-F8448C5B8C59}" src="https://github.com/user-attachments/assets/110e1946-3341-4ea6-a66e-166a40e7fcb5" />
+```bash
+git clone https://github.com/Yuhtin/cs2-skins-website.git
+cd cs2-skins-website
 
----
+# Build the frontend (one-time, produces dist/)
+npm ci
+cd frontend && npm ci && npm run build
 
-## 📦 Structure
-# 🎮 CS2 Weapon Customizer
+# Create backend config
+cp backend/config.sample.php backend/config.php
+# Edit backend/config.php with your Steam API key and MySQL credentials
 
-A modern, React-powered web app for **customizing Counter-Strike 2 weapon skins**, stickers, nametags and keychains. Includes a full PHP backend with Steam login and MySQL storage.
+# Point your web server's document root at ./dist
+```
 
-> 🧪 Educational project — use at your own risk.
+## Configuration
 
----
+### Backend (`backend/config.php`)
 
-## 📢 What is this?
+```php
+define('STEAM_API_KEY', 'YOUR_STEAM_WEB_API_KEY');
+define('DOMAIN_NAME', 'https://your.domain.com');
+define('DB_HOST', 'your-mysql-host');
+define('DB_PORT', '3306');
+define('DB_NAME', 'weaponpaints');
+define('DB_USER', 'weaponpaints_user');
+define('DB_PASS', 'your-db-password');
+```
 
-This is an **enhanced and extended version** of [cs2-WeaponPaints by Nereziel](https://github.com/Nereziel/cs2-WeaponPaints), redesigned as a complete **full-stack platform**:
+### Frontend branding (build-time env vars)
 
-- Uses the original **weapon/sticker/keychain data** and images from Nereziel's repo.
-- Fully supports the **[CounterStrikeSharp Weapon Paint Plugin](https://github.com/Nereziel/cs2-WeaponPaints/tree/main/server)** for CS2 servers.
-- Backend-ready — stores skins per Steam ID, with team (T/CT) separation.
-- Designed for server-side skin injection and syncing player preferences.
-- Built to be fast, responsive and easy to customize.
+Create `frontend/.env.production.local`:
 
----
+```
+VITE_SERVER_NAME="Your Server Name"
+VITE_SERVER_URL="steam://connect/YOUR.IP.HERE:27015"   # optional
+VITE_DISCORD_URL="https://discord.gg/your-invite"       # optional
+```
 
-## 🚀 Features
+These render on the login page header and optional badge links. All three are optional — defaults ship with generic strings.
 
-- 🧩 Select skins, wear, seed, nametag
-- 🎨 Choose 4 stickers with real previews
-- 🔑 Assign keychains and control offset
-- 🧠 Automatically saves to your Steam-linked database profile
-- 🛠️ Works with CS2 WeaponPaint plugin for server skin injection
+## Development
 
----
+See [CONTRIBUTING.md](CONTRIBUTING.md) for local dev setup and contribution guidelines.
 
-## 📦 Structure
-- /frontend → React (Vite) interface
-- /backend → PHP backend (Steam Auth + MySQL)
-- /config.sample.php → Config template for API keys and DB
+## License
 
+MIT — see [LICENSE](LICENSE).
 
+## Credits
 
----
-
-## 🖥️ Demo website 
-[SKINS WEBSITE DEMO](https://skiny.blazepro.pl/)
-
-## ⚙️ Setup Instructions
-
-### 🔧 Backend + Frontend (Production-Ready)
-
-1. **Download the latest release** from the [Releases](../../releases) tab.  
-   It contains:
-   - `/` — prebuilt React app (Vite) 
-   - `/api/` — backend PHP API (`/backend` folder renamed to `/api/`)
-
-2. **Configure the backend**
-   - Rename `api/config.sample.php` → `config.php`
-   - Fill in your:
-     - **Steam Web API Key**
-     - **Domain name**
-     - **MySQL database credentials**
-
-3. **Upload the project to your server**
-   - Upload the full release folder to your web server
-
-4. **Done!**  
-   Visit your domain in the browser and enjoy 🎉
-
-> ✅ No need to compile anything — the frontend is already built using `vite build`.
-
-> ⚠️ Make sure your PHP hosting supports **PDO + MySQL** and HTTPS is enabled.
-
----
-
-## 🔐 Steam Authentication
-- Uses OpenID login via steamauth/
-
-- Automatically stores user skins by their SteamID (wp_player_skins table)
-
-- Logout via /steamauth/logout.php
-
-## 📸 Skin Images & Data
-All images, weapon definitions, sticker JSONs, and keychains are loaded from:
- - https://github.com/Nereziel/cs2-WeaponPaints (used under open license)
- - All rights belong to their respective owners (Valve, Nereziel, community).
-
-## ⚠️ Legal & Safety
-- This project is for educational and hobbyist purposes only.
-
-- Use on your own servers only.
-
-- This is not affiliated with Valve or Steam.
-
-- Do not use to bypass in-game purchases or monetization.
+- [skullboypl/cs2-weapon-paint-website](https://github.com/skullboypl/cs2-weapon-paint-website) — upstream fork that this project started from
+- [Nereziel/cs2-WeaponPaints](https://github.com/Nereziel/cs2-WeaponPaints) — the CS2 server-side plugin this panel controls, and the canonical skin/sticker/keychain catalog
+- [Lucide](https://lucide.dev), [Radix UI](https://radix-ui.com), [Tailwind CSS](https://tailwindcss.com), [Vite](https://vitejs.dev), [React](https://react.dev)

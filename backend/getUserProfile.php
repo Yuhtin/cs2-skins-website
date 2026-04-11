@@ -5,6 +5,7 @@ session_start();
 require_once __DIR__ . '/config.php';
 
 header('Content-Type: application/json');
+header('X-Content-Type-Options: nosniff');
 
 if (!isset($_SESSION['steamid'])) {
     echo json_encode(['error' => 'Not logged in']);

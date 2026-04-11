@@ -1,4 +1,13 @@
 {
+  "name": "cs2-skins-website",
+  "version": "1.0.0",
+  "description": "Open-source web panel for the cs2-WeaponPaints plugin — CS2-style loadout editor with i18n and inline editing",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Yuhtin/cs2-skins-website.git"
+  },
+  "license": "MIT",
+  "author": "Davi Duarte <rio.daviduarte@gmail.com>",
   "dependencies": {
     "fs-extra": "^11.3.1"
   }

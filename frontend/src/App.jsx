@@ -1,22 +1,19 @@
-import { useUser } from './components/useUser';
-import Login from './components/Login';
-import Page from './pages/Page';
-import { useState } from 'react';
-import './App.css'; 
+import { useUser } from './hooks/useUser';
+import { LoginPage } from './pages/LoginPage';
+import { LoadoutPage } from './pages/LoadoutPage';
+import { useTranslation } from './hooks/useTranslation';
 
 export default function App() {
   const { user, loading } = useUser();
-  const [team, setTeam] = useState(null); //if CT or T is selected
+  const { t } = useTranslation();
 
-  if (loading) return <main className='loading_div'><main className='loading_div_container'><p>Loading...</p></main></main>;
+  if (loading) {
+    return (
+      <main className="min-h-screen flex items-center justify-center">
+        <p className="text-muted font-display text-lg">{t('common.loading')}</p>
+      </main>
+    );
+  }
 
-  return (
-    <div>
-      {user ? (
-        <Page user={user} team={team} setTeam={setTeam} />
-      ) : (
-        <Login />
-      )}
-    </div>
-  );
+  return user ? <LoadoutPage user={user} /> : <LoginPage />;
 }
