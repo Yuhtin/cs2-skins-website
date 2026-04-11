@@ -1,0 +1,42 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install and build
+        run: |
+          npm ci
+          cd frontend
+          npm ci
+          npm run build
+
+      - name: Create zip
+        run: |
+          VERSION=${GITHUB_REF_NAME#v}
+          zip -r cs2-skins-website-${VERSION}.zip dist backend README.md LICENSE
+
+      - name: Extract changelog section
+        id: changelog
+        run: |
+          VERSION=${GITHUB_REF_NAME#v}
+          awk "/^## \\[${VERSION}\\]/,/^## \\[/" CHANGELOG.md | sed '$d' > release-notes.md || echo "(see CHANGELOG.md)" > release-notes.md
+          cat release-notes.md
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          body_path: release-notes.md
+          files: cs2-skins-website-*.zip
