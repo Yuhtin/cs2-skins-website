@@ -2,33 +2,26 @@ import { useEffect, useMemo, useState } from 'react';
 import { Search } from 'lucide-react';
 import { useTranslation } from '../../hooks/useTranslation';
 import { Input } from '../ui/Input';
-
-// Loads the skins_en.json catalog once, then filters by weapon_defindex + search.
-let CATALOG_CACHE = null;
-async function loadCatalog() {
-  if (CATALOG_CACHE) return CATALOG_CACHE;
-  const res = await fetch('/data/skins_en.json');
-  CATALOG_CACHE = await res.json();
-  return CATALOG_CACHE;
-}
+import { ensureSkinCatalog, getSkinsForWeapon } from '../../lib/skins';
 
 export function SkinPicker({ weaponDefindex, selectedPaintId, onSelect }) {
   const { t } = useTranslation();
-  const [catalog, setCatalog] = useState([]);
+  const [catalogReady, setCatalogReady] = useState(false);
   const [search, setSearch] = useState('');
   const [hoveredSkin, setHoveredSkin] = useState(null);
   const [hoverPos, setHoverPos] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
-    loadCatalog().then(setCatalog);
+    ensureSkinCatalog().then(() => setCatalogReady(true));
   }, []);
 
   const skins = useMemo(() => {
-    const filtered = catalog.filter((s) => s.weapon_defindex === weaponDefindex);
+    if (!catalogReady) return [];
+    const filtered = getSkinsForWeapon(weaponDefindex);
     if (!search) return filtered;
     const q = search.toLowerCase();
     return filtered.filter((s) => (s.paint_name || '').toLowerCase().includes(q));
-  }, [catalog, weaponDefindex, search]);
+  }, [catalogReady, weaponDefindex, search]);
 
   return (
     <div className="p-4 border-b border-subtle">
