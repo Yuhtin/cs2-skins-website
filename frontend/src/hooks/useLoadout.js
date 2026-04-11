@@ -4,6 +4,7 @@ import { getWeaponByDefindex, KNIVES } from '../lib/weapons';
 import { ensureSkinCatalog, getSkinByDefindexAndPaint } from '../lib/skins';
 import { ensureRarityCatalog, getRarityColor } from '../lib/rarity';
 import { ensureGlovesCatalog, getGlovesCatalog } from '../lib/equipment-catalogs';
+import { ensureAgentCatalog, getAgentByModel } from '../lib/agents';
 
 // Loads and caches the full user loadout for both teams.
 // Returns a map keyed by `${weaponInternal}.${team}` → enriched skin/equipment row.
@@ -35,6 +36,7 @@ export function useLoadout() {
         ensureSkinCatalog(),
         ensureRarityCatalog(),
         ensureGlovesCatalog(),
+        ensureAgentCatalog(),
       ]);
 
       const next = {};
@@ -125,9 +127,21 @@ export function useLoadout() {
 
       // --- Enrich agent rows (one combined response) ---
       // agent_get returns { agent_ct, agent_t } — both in one row.
-      // CharacterPreview + EquipmentRail consumers read .agent as the model string.
-      if (agentData?.agent_ct) next['ct_agent.CT'] = { agent: agentData.agent_ct };
-      if (agentData?.agent_t) next['tt_agent.T'] = { agent: agentData.agent_t };
+      // Look up each model in the agent catalog to attach image + display name
+      // so the EquipmentRail slot can render the portrait, not just the default.
+      const enrichAgent = (modelString) => {
+        if (!modelString) return null;
+        const info = getAgentByModel(modelString);
+        return {
+          agent: modelString,
+          image: info?.image,
+          displayName: info?.name,
+        };
+      };
+      const ctAgentEnriched = enrichAgent(agentData?.agent_ct);
+      const tAgentEnriched = enrichAgent(agentData?.agent_t);
+      if (ctAgentEnriched) next['ct_agent.CT'] = ctAgentEnriched;
+      if (tAgentEnriched) next['tt_agent.T'] = tAgentEnriched;
 
       setLoadout(next);
     } catch (err) {

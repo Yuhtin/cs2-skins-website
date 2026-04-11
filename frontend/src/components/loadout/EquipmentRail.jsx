@@ -51,6 +51,8 @@ export function EquipmentRail({ team, loadout, onRefreshLoadout }) {
               ? applied.displayName
               : slot.slotType === 'gloves' && applied?.paint_name
               ? applied.paint_name.split('|').slice(1).join('|').trim() || t(slot.labelKey)
+              : slot.slotType === 'agent' && applied?.displayName
+              ? applied.displayName.split('|')[0].trim()
               : t(slot.labelKey);
 
           return (
