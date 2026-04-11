@@ -3,6 +3,7 @@ import { Toaster } from 'sonner';
 import { Header } from '../components/layout/Header';
 import { Arsenal } from '../components/arsenal/Arsenal';
 import { EditorPanel } from '../components/editor/EditorPanel';
+import { MobileEditorSheet } from '../components/editor/MobileEditorSheet';
 import { StickerPicker } from '../components/popups/StickerPicker';
 import { KeychainPicker } from '../components/popups/KeychainPicker';
 import { useLoadout } from '../hooks/useLoadout';
@@ -55,6 +56,12 @@ export function LoadoutPage({ user }) {
                 <Arsenal loadout={loadout} search={search} />
               </main>
               <EditorPanel
+                loadout={loadout}
+                onSaved={refresh}
+                onOpenStickerPicker={openStickerPicker}
+                onOpenKeychainPicker={openKeychainPicker}
+              />
+              <MobileEditorSheet
                 loadout={loadout}
                 onSaved={refresh}
                 onOpenStickerPicker={openStickerPicker}
