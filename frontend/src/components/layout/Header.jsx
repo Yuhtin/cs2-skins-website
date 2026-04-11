@@ -1,12 +1,10 @@
-import { LogOut, Search } from 'lucide-react';
+import { LogOut } from 'lucide-react';
 import { useTranslation } from '../../hooks/useTranslation';
 import { CONFIG } from '../../config';
 import { logout } from '../../lib/api';
 import { LanguageSwitch } from './LanguageSwitch';
-import { TeamHighlightSwitch } from './TeamHighlight';
-import { Input } from '../ui/Input';
 
-export function Header({ user, search, onSearchChange }) {
+export function Header({ user }) {
   const { t } = useTranslation();
 
   return (
@@ -22,21 +20,7 @@ export function Header({ user, search, onSearchChange }) {
           </span>
         </div>
 
-        {/* Search */}
-        <div className="flex-1 max-w-md relative">
-          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-faint pointer-events-none" />
-          <Input
-            value={search}
-            onChange={(e) => onSearchChange(e.target.value)}
-            placeholder={t('header.search_placeholder')}
-            className="pl-9 h-9 text-sm"
-            aria-label={t('header.search_placeholder')}
-            data-search-input="true"
-          />
-        </div>
-
         <div className="flex items-center gap-3 ml-auto">
-          <TeamHighlightSwitch />
           <LanguageSwitch />
 
           {user && (
