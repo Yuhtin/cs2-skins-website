@@ -26,26 +26,26 @@ export function WeaponCard({ weapon, appliedSkin, isSelected, onClick, variant =
       aria-pressed={isSelected}
     >
       {appliedSkin && <CustomizedBadge skinName={appliedSkin.paint_name} />}
-      <div className="flex-1 flex items-center justify-center w-full overflow-hidden">
+      <div className="flex-[2] flex items-center justify-center w-full overflow-hidden min-h-0">
         <img
           src={imageSrc}
           alt={weapon.displayName}
-          className="max-w-full max-h-full object-contain drop-shadow-md"
+          className="max-w-full max-h-full object-contain drop-shadow-[0_6px_12px_rgba(0,0,0,0.6)] transition-transform duration-200 group-hover:scale-105"
           draggable={false}
           loading="lazy"
         />
       </div>
-      <div className="w-full text-center mt-1">
+      <div className="w-full text-center mt-1.5 flex-shrink-0">
         <div
           className={clsx(
-            'font-semibold text-sm truncate',
+            'font-semibold text-sm truncate leading-tight',
             isSelected ? 'text-team-accent' : 'text-team-fg',
           )}
         >
           {highlightMatch(weapon.displayName, searchHighlight)}
         </div>
         {customSkinName && (
-          <div className="text-[11px] text-team-muted truncate">{customSkinName}</div>
+          <div className="text-[10px] text-team-muted truncate mt-0.5">{customSkinName}</div>
         )}
       </div>
     </button>

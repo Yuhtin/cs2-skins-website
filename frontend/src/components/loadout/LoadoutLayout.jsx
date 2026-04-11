@@ -38,6 +38,23 @@ export function LoadoutLayout({ team, loadout }) {
     >
       {/* Team-accent glow stripe at the top */}
       <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-team-accent to-transparent opacity-60 pointer-events-none" />
+      {/* Corner accent brackets */}
+      <div className="absolute top-3 left-3 w-6 h-6 pointer-events-none z-10">
+        <div className="absolute top-0 left-0 w-full h-[2px] bg-team-accent" />
+        <div className="absolute top-0 left-0 h-full w-[2px] bg-team-accent" />
+      </div>
+      <div className="absolute top-3 right-3 w-6 h-6 pointer-events-none z-10">
+        <div className="absolute top-0 right-0 w-full h-[2px] bg-team-accent" />
+        <div className="absolute top-0 right-0 h-full w-[2px] bg-team-accent" />
+      </div>
+      <div className="absolute bottom-3 left-3 w-6 h-6 pointer-events-none z-10">
+        <div className="absolute bottom-0 left-0 w-full h-[2px] bg-team-accent" />
+        <div className="absolute bottom-0 left-0 h-full w-[2px] bg-team-accent" />
+      </div>
+      <div className="absolute bottom-3 right-3 w-6 h-6 pointer-events-none z-10">
+        <div className="absolute bottom-0 right-0 w-full h-[2px] bg-team-accent" />
+        <div className="absolute bottom-0 right-0 h-full w-[2px] bg-team-accent" />
+      </div>
       <CategoryRail
         activeCategory={activeCategory}
         onSelectCategory={handleSelectCategory}

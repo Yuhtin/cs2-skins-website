@@ -24,11 +24,14 @@ export function WeaponGroup({ weapons, categoryId, loadout }) {
       {groups.map((group) => (
         <section key={group.subgroupId}>
           <div className="flex items-center gap-4 mb-5">
-            <div className="h-[2px] w-6 bg-team-accent" />
+            <div className="flex items-center gap-1">
+              <div className="h-[2px] w-4 bg-team-accent" />
+              <div className="w-0 h-0 border-l-[6px] border-l-team-accent border-t-[4px] border-t-transparent border-b-[4px] border-b-transparent" />
+            </div>
             <h3 className="font-display font-bold text-sm uppercase tracking-[0.25em] text-team-accent whitespace-nowrap">
               {t(group.labelKey)}
             </h3>
-            <div className="flex-1 h-px bg-team-border" />
+            <div className="flex-1 h-px bg-gradient-to-r from-team-border to-transparent" />
           </div>
           <div className="flex flex-wrap gap-4">
             {group.weapons.map((weapon) => {
