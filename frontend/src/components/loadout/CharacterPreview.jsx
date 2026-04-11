@@ -7,9 +7,10 @@ export function CharacterPreview({ team, loadout }) {
   const agentKey = team === 'CT' ? 'ct_agent.CT' : 'tt_agent.T';
   const appliedAgent = loadout[agentKey];
 
-  // Agent image: prefer the applied skin image, else use a team-generic silhouette
-  // that already exists in /weapons/agent_default.png.
-  const imageSrc = appliedAgent?.image || '/weapons/agent_default.png';
+  // Agent image: prefer the applied skin image, else the team-generic default
+  // silhouette shipped in frontend/public/agents/ (SAS for CT, Phoenix for T).
+  const defaultAgentImage = team === 'CT' ? '/agents/ct_sas.png' : '/agents/tt_phoenix.png';
+  const imageSrc = appliedAgent?.image || defaultAgentImage;
   const agentName = appliedAgent?.agent_name || (team === 'CT' ? t('equipment.agent_ct') : t('equipment.agent_t'));
 
   return (
