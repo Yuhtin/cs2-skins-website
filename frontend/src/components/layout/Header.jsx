@@ -31,6 +31,7 @@ export function Header({ user, search, onSearchChange }) {
             placeholder={t('header.search_placeholder')}
             className="pl-9 h-9 text-sm"
             aria-label={t('header.search_placeholder')}
+            data-search-input="true"
           />
         </div>
 
