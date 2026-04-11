@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
 import { useSelectedWeapon } from '../../hooks/useSelectedWeapon';
 import { useTranslation } from '../../hooks/useTranslation';
-import { saveSkin, saveKnife } from '../../lib/api';
+import { saveSkin } from '../../lib/api';
 import { EditorEmptyState } from './EditorEmptyState';
 import { EditorHeader } from './EditorHeader';
 import { SkinPreview } from './SkinPreview';
@@ -17,7 +17,7 @@ import { EditorFooter } from './EditorFooter';
 
 export function EditorPanel({ loadout, onSaved, onOpenStickerPicker, onOpenKeychainPicker, mobile = false }) {
   const { t } = useTranslation();
-  const { selectedWeapon, isDirty, clearDirty, markDirty } = useSelectedWeapon();
+  const { selectedWeapon, isDirty, clearDirty, markDirty, selectWeapon } = useSelectedWeapon();
   const [draft, setDraft] = useState(null);
   const [isSaving, setIsSaving] = useState(false);
 
@@ -70,14 +70,11 @@ export function EditorPanel({ loadout, onSaved, onOpenStickerPicker, onOpenKeych
     setIsSaving(true);
     try {
       const params = buildSaveParams(selectedWeapon, draft);
-      if (selectedWeapon.slotType === 'knife') {
-        await saveKnife(params);
-      } else {
-        await saveSkin(params);
-      }
+      await saveSkin(params);
       toast.success(t('toast.save_success'));
       clearDirty();
       onSaved();
+      selectWeapon(null); // auto-close the drawer
     } catch (err) {
       toast.error(t('toast.save_error', { error: err.message }));
     } finally {

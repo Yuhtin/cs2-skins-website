@@ -30,7 +30,11 @@ export function AgentPickerDialog({ open, team, onClose, onSaved }) {
   const handlePick = async (agent) => {
     setIsSaving(true);
     try {
-      await saveAgent({ team, agent: agent.model });
+      await saveAgent({
+        team,                                   // 'CT' or 'T' for backend's team validation block
+        agent_model: agent.model,               // the character model string
+        agent_team: team === 'CT' ? 3 : 2,      // numeric for the backend agent_save branch
+      });
       toast.success(t('toast.save_success'));
       onSaved();
       onClose();

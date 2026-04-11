@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from '../../hooks/useTranslation';
+import { useSelectedWeapon } from '../../hooks/useSelectedWeapon';
 import { AgentPickerDialog } from '../popups/AgentPickerDialog';
 import { KnifePickerDialog } from '../popups/KnifePickerDialog';
 import { GlovesPickerDialog } from '../popups/GlovesPickerDialog';
@@ -17,9 +18,27 @@ const SLOTS_T = [
 
 export function EquipmentRail({ team, loadout, onRefreshLoadout }) {
   const { t } = useTranslation();
+  const { selectWeapon } = useSelectedWeapon();
   const [activePicker, setActivePicker] = useState(null); // 'knife' | 'gloves' | 'agent' | null
 
   const slots = team === 'CT' ? SLOTS_CT : SLOTS_T;
+  const appliedKnife = loadout[team === 'CT' ? 'knife_ct.CT' : 'knife_t.T'];
+
+  // Opens the main EditorDrawer for editing the currently-applied knife's paint.
+  // Only meaningful when a knife model is already equipped.
+  const openKnifePaintEditor = () => {
+    if (!appliedKnife?.defindex) return;
+    setActivePicker(null);
+    selectWeapon({
+      internal: team === 'CT' ? 'knife_ct' : 'knife_t',
+      displayName: appliedKnife.displayName,
+      image: appliedKnife.image,
+      team,
+      category: 'equipment',
+      slotType: 'knife_paint',        // distinct from 'knife' so EditorPanel calls saveSkin
+      cs2Id: appliedKnife.defindex,    // required for SkinPicker to filter paints
+    });
+  };
 
   return (
     <>
@@ -27,6 +46,13 @@ export function EquipmentRail({ team, loadout, onRefreshLoadout }) {
         {slots.map((slot) => {
           const applied = loadout[`${slot.internal}.${slot.team}`];
           const imageSrc = applied?.image || `/weapons/${slot.slotType}_default.png`;
+          const label =
+            slot.slotType === 'knife' && applied?.displayName
+              ? applied.displayName
+              : slot.slotType === 'gloves' && applied?.paint_name
+              ? applied.paint_name.split('|').slice(1).join('|').trim() || t(slot.labelKey)
+              : t(slot.labelKey);
+
           return (
             <button
               key={slot.internal}
@@ -36,12 +62,12 @@ export function EquipmentRail({ team, loadout, onRefreshLoadout }) {
             >
               <img
                 src={imageSrc}
-                alt={t(slot.labelKey)}
+                alt={label}
                 className="max-w-full max-h-[60%] object-contain"
                 draggable={false}
               />
               <span className="text-[10px] font-semibold uppercase tracking-wider text-team-muted truncate w-full text-center">
-                {t(slot.labelKey)}
+                {label}
               </span>
             </button>
           );
@@ -57,8 +83,10 @@ export function EquipmentRail({ team, loadout, onRefreshLoadout }) {
       <KnifePickerDialog
         open={activePicker === 'knife'}
         team={team}
+        appliedKnife={appliedKnife}
         onClose={() => setActivePicker(null)}
         onSaved={onRefreshLoadout}
+        onEditPaint={openKnifePaintEditor}
       />
       <GlovesPickerDialog
         open={activePicker === 'gloves'}
