@@ -7,7 +7,7 @@ import { getWeaponsBySection, WEAPONS } from '../../lib/weapons';
 
 // Single-team loadout view: category rail | weapon groups | character preview
 // Wrapping div has data-team attribute to activate team theme tokens.
-export function LoadoutLayout({ team, loadout }) {
+export function LoadoutLayout({ team, loadout, onRefreshLoadout }) {
   const { t } = useTranslation();
   const [activeCategory, setActiveCategory] = useState('pistols');
   const scrollContainerRef = useRef(null);
@@ -76,7 +76,7 @@ export function LoadoutLayout({ team, loadout }) {
         )}
       </main>
       <aside className="flex-shrink-0 w-[340px] p-6 border-l-2 border-team-border bg-gradient-to-b from-team-surface via-team-bg to-team-bg shadow-[inset_8px_0_24px_rgba(0,0,0,0.4)]">
-        <CharacterPreview team={team} loadout={loadout} />
+        <CharacterPreview team={team} loadout={loadout} onRefreshLoadout={onRefreshLoadout} />
       </aside>
     </div>
   );

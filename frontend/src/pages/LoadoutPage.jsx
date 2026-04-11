@@ -52,7 +52,7 @@ export function LoadoutPage({ user }) {
               </div>
               <TeamToggle team={currentTeam} onChange={setCurrentTeam} />
             </div>
-            <LoadoutLayout team={currentTeam} loadout={loadout} />
+            <LoadoutLayout team={currentTeam} loadout={loadout} onRefreshLoadout={refresh} />
           </div>
         </div>
 
