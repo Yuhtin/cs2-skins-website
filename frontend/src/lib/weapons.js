@@ -3,51 +3,54 @@
 // `weapon_m4a1_silencer` is the M4A1-S. Upstream data misnames them — we fix the
 // display layer, not the image/file paths (which still follow CS naming).
 
+// `csItem` is the CounterStrikeSharp `CsItem` enum integer used by the
+// RetakesAllocator's UserSettings.WeaponPreferences JSON blob — see
+// CSSharp's CsItem.cs for the canonical mapping.
 export const WEAPONS = [
   // Rifles
-  { internal: 'ak47',          displayName: 'AK-47',         category: 'rifles', subgroup: 'rifle',          team: 'T',    cs2Id: 7,   image: '/weapons/weapon_ak47.png' },
-  { internal: 'm4a1',          displayName: 'M4A4',          category: 'rifles', subgroup: 'rifle',          team: 'CT',   cs2Id: 16,  image: '/weapons/weapon_m4a1.png' },
-  { internal: 'm4a1_silencer', displayName: 'M4A1-S',        category: 'rifles', subgroup: 'rifle',          team: 'CT',   cs2Id: 60,  image: '/weapons/weapon_m4a1_silencer.png' },
-  { internal: 'aug',           displayName: 'AUG',           category: 'rifles', subgroup: 'mid_tier_rifle', team: 'CT',   cs2Id: 8,   image: '/weapons/weapon_aug.png' },
-  { internal: 'famas',         displayName: 'FAMAS',         category: 'rifles', subgroup: 'mid_tier_rifle', team: 'CT',   cs2Id: 10,  image: '/weapons/weapon_famas.png' },
-  { internal: 'galilar',       displayName: 'Galil AR',      category: 'rifles', subgroup: 'mid_tier_rifle', team: 'T',    cs2Id: 13,  image: '/weapons/weapon_galilar.png' },
-  { internal: 'sg556',         displayName: 'SG 553',        category: 'rifles', subgroup: 'mid_tier_rifle', team: 'T',    cs2Id: 39,  image: '/weapons/weapon_sg556.png' },
+  { internal: 'ak47',          displayName: 'AK-47',         category: 'rifles', subgroup: 'rifle',          team: 'T',    cs2Id: 7,   csItem: 400, image: '/weapons/weapon_ak47.png' },
+  { internal: 'm4a1',          displayName: 'M4A4',          category: 'rifles', subgroup: 'rifle',          team: 'CT',   cs2Id: 16,  csItem: 402, image: '/weapons/weapon_m4a1.png' },
+  { internal: 'm4a1_silencer', displayName: 'M4A1-S',        category: 'rifles', subgroup: 'rifle',          team: 'CT',   cs2Id: 60,  csItem: 401, image: '/weapons/weapon_m4a1_silencer.png' },
+  { internal: 'aug',           displayName: 'AUG',           category: 'rifles', subgroup: 'mid_tier_rifle', team: 'CT',   cs2Id: 8,   csItem: 407, image: '/weapons/weapon_aug.png' },
+  { internal: 'famas',         displayName: 'FAMAS',         category: 'rifles', subgroup: 'mid_tier_rifle', team: 'CT',   cs2Id: 10,  csItem: 404, image: '/weapons/weapon_famas.png' },
+  { internal: 'galilar',       displayName: 'Galil AR',      category: 'rifles', subgroup: 'mid_tier_rifle', team: 'T',    cs2Id: 13,  csItem: 403, image: '/weapons/weapon_galilar.png' },
+  { internal: 'sg556',         displayName: 'SG 553',        category: 'rifles', subgroup: 'mid_tier_rifle', team: 'T',    cs2Id: 39,  csItem: 405, image: '/weapons/weapon_sg556.png' },
 
   // Snipers (grouped under rifles category per spec §5.3)
-  { internal: 'awp',           displayName: 'AWP',           category: 'rifles', subgroup: 'sniper',         team: 'both', cs2Id: 9,   image: '/weapons/weapon_awp.png' },
-  { internal: 'ssg08',         displayName: 'SSG 08',        category: 'rifles', subgroup: 'sniper',         team: 'both', cs2Id: 40,  image: '/weapons/weapon_ssg08.png' },
-  { internal: 'scar20',        displayName: 'SCAR-20',       category: 'rifles', subgroup: 'sniper',         team: 'CT',   cs2Id: 38,  image: '/weapons/weapon_scar20.png' },
-  { internal: 'g3sg1',         displayName: 'G3SG1',         category: 'rifles', subgroup: 'sniper',         team: 'T',    cs2Id: 11,  image: '/weapons/weapon_g3sg1.png' },
+  { internal: 'awp',           displayName: 'AWP',           category: 'rifles', subgroup: 'sniper',         team: 'both', cs2Id: 9,   csItem: 406, image: '/weapons/weapon_awp.png' },
+  { internal: 'ssg08',         displayName: 'SSG 08',        category: 'rifles', subgroup: 'sniper',         team: 'both', cs2Id: 40,  csItem: 408, image: '/weapons/weapon_ssg08.png' },
+  { internal: 'scar20',        displayName: 'SCAR-20',       category: 'rifles', subgroup: 'sniper',         team: 'CT',   cs2Id: 38,  csItem: 409, image: '/weapons/weapon_scar20.png' },
+  { internal: 'g3sg1',         displayName: 'G3SG1',         category: 'rifles', subgroup: 'sniper',         team: 'T',    cs2Id: 11,  csItem: 410, image: '/weapons/weapon_g3sg1.png' },
 
   // SMGs
-  { internal: 'mac10',         displayName: 'MAC-10',        category: 'smgs', subgroup: 'smg',              team: 'T',    cs2Id: 17,  image: '/weapons/weapon_mac10.png' },
-  { internal: 'mp9',           displayName: 'MP9',           category: 'smgs', subgroup: 'smg',              team: 'CT',   cs2Id: 34,  image: '/weapons/weapon_mp9.png' },
-  { internal: 'mp7',           displayName: 'MP7',           category: 'smgs', subgroup: 'smg',              team: 'both', cs2Id: 33,  image: '/weapons/weapon_mp7.png' },
-  { internal: 'mp5sd',         displayName: 'MP5-SD',        category: 'smgs', subgroup: 'smg',              team: 'both', cs2Id: 23,  image: '/weapons/weapon_mp5sd.png' },
-  { internal: 'ump45',         displayName: 'UMP-45',        category: 'smgs', subgroup: 'smg',              team: 'both', cs2Id: 24,  image: '/weapons/weapon_ump45.png' },
-  { internal: 'p90',           displayName: 'P90',           category: 'smgs', subgroup: 'smg',              team: 'both', cs2Id: 19,  image: '/weapons/weapon_p90.png' },
-  { internal: 'bizon',         displayName: 'PP-Bizon',      category: 'smgs', subgroup: 'smg',              team: 'both', cs2Id: 26,  image: '/weapons/weapon_bizon.png' },
+  { internal: 'mac10',         displayName: 'MAC-10',        category: 'smgs', subgroup: 'smg',              team: 'T',    cs2Id: 17,  csItem: 300, image: '/weapons/weapon_mac10.png' },
+  { internal: 'mp9',           displayName: 'MP9',           category: 'smgs', subgroup: 'smg',              team: 'CT',   cs2Id: 34,  csItem: 301, image: '/weapons/weapon_mp9.png' },
+  { internal: 'mp7',           displayName: 'MP7',           category: 'smgs', subgroup: 'smg',              team: 'both', cs2Id: 33,  csItem: 302, image: '/weapons/weapon_mp7.png' },
+  { internal: 'mp5sd',         displayName: 'MP5-SD',        category: 'smgs', subgroup: 'smg',              team: 'both', cs2Id: 23,  csItem: 304, image: '/weapons/weapon_mp5sd.png' },
+  { internal: 'ump45',         displayName: 'UMP-45',        category: 'smgs', subgroup: 'smg',              team: 'both', cs2Id: 24,  csItem: 306, image: '/weapons/weapon_ump45.png' },
+  { internal: 'p90',           displayName: 'P90',           category: 'smgs', subgroup: 'smg',              team: 'both', cs2Id: 19,  csItem: 303, image: '/weapons/weapon_p90.png' },
+  { internal: 'bizon',         displayName: 'PP-Bizon',      category: 'smgs', subgroup: 'smg',              team: 'both', cs2Id: 26,  csItem: 305, image: '/weapons/weapon_bizon.png' },
 
   // Pistols
-  { internal: 'glock',         displayName: 'Glock-18',      category: 'pistols', subgroup: 'starting_pistol', team: 'T',    cs2Id: 4,   image: '/weapons/weapon_glock.png' },
-  { internal: 'usp_silencer',  displayName: 'USP-S',         category: 'pistols', subgroup: 'starting_pistol', team: 'CT',   cs2Id: 61,  image: '/weapons/weapon_usp_silencer.png' },
-  { internal: 'hkp2000',       displayName: 'P2000',         category: 'pistols', subgroup: 'starting_pistol', team: 'CT',   cs2Id: 32,  image: '/weapons/weapon_hkp2000.png' },
-  { internal: 'p250',          displayName: 'P250',          category: 'pistols', subgroup: 'other_pistol',    team: 'both', cs2Id: 36,  image: '/weapons/weapon_p250.png' },
-  { internal: 'fiveseven',     displayName: 'Five-SeveN',    category: 'pistols', subgroup: 'other_pistol',    team: 'CT',   cs2Id: 3,   image: '/weapons/weapon_fiveseven.png' },
-  { internal: 'cz75a',         displayName: 'CZ75-Auto',     category: 'pistols', subgroup: 'other_pistol',    team: 'both', cs2Id: 63,  image: '/weapons/weapon_cz75a.png' },
-  { internal: 'tec9',          displayName: 'Tec-9',         category: 'pistols', subgroup: 'other_pistol',    team: 'T',    cs2Id: 30,  image: '/weapons/weapon_tec9.png' },
-  { internal: 'elite',         displayName: 'Dual Berettas', category: 'pistols', subgroup: 'other_pistol',    team: 'both', cs2Id: 2,   image: '/weapons/weapon_elite.png' },
-  { internal: 'deagle',        displayName: 'Desert Eagle',  category: 'pistols', subgroup: 'other_pistol',    team: 'both', cs2Id: 1,   image: '/weapons/weapon_deagle.png' },
-  { internal: 'revolver',      displayName: 'R8 Revolver',   category: 'pistols', subgroup: 'other_pistol',    team: 'both', cs2Id: 64,  image: '/weapons/weapon_revolver.png' },
-  { internal: 'taser',         displayName: 'Zeus x27',      category: 'pistols', subgroup: 'other_pistol',    team: 'both', cs2Id: 31,  image: '/weapons/weapon_taser.png' },
+  { internal: 'glock',         displayName: 'Glock-18',      category: 'pistols', subgroup: 'starting_pistol', team: 'T',    cs2Id: 4,   csItem: 201, image: '/weapons/weapon_glock.png' },
+  { internal: 'usp_silencer',  displayName: 'USP-S',         category: 'pistols', subgroup: 'starting_pistol', team: 'CT',   cs2Id: 61,  csItem: 202, image: '/weapons/weapon_usp_silencer.png' },
+  { internal: 'hkp2000',       displayName: 'P2000',         category: 'pistols', subgroup: 'starting_pistol', team: 'CT',   cs2Id: 32,  csItem: 203, image: '/weapons/weapon_hkp2000.png' },
+  { internal: 'p250',          displayName: 'P250',          category: 'pistols', subgroup: 'other_pistol',    team: 'both', cs2Id: 36,  csItem: 206, image: '/weapons/weapon_p250.png' },
+  { internal: 'fiveseven',     displayName: 'Five-SeveN',    category: 'pistols', subgroup: 'other_pistol',    team: 'CT',   cs2Id: 3,   csItem: 208, image: '/weapons/weapon_fiveseven.png' },
+  { internal: 'cz75a',         displayName: 'CZ75-Auto',     category: 'pistols', subgroup: 'other_pistol',    team: 'both', cs2Id: 63,  csItem: 207, image: '/weapons/weapon_cz75a.png' },
+  { internal: 'tec9',          displayName: 'Tec-9',         category: 'pistols', subgroup: 'other_pistol',    team: 'T',    cs2Id: 30,  csItem: 205, image: '/weapons/weapon_tec9.png' },
+  { internal: 'elite',         displayName: 'Dual Berettas', category: 'pistols', subgroup: 'other_pistol',    team: 'both', cs2Id: 2,   csItem: 204, image: '/weapons/weapon_elite.png' },
+  { internal: 'deagle',        displayName: 'Desert Eagle',  category: 'pistols', subgroup: 'other_pistol',    team: 'both', cs2Id: 1,   csItem: 200, image: '/weapons/weapon_deagle.png' },
+  { internal: 'revolver',      displayName: 'R8 Revolver',   category: 'pistols', subgroup: 'other_pistol',    team: 'both', cs2Id: 64,  csItem: 209, image: '/weapons/weapon_revolver.png' },
+  { internal: 'taser',         displayName: 'Zeus x27',      category: 'pistols', subgroup: 'other_pistol',    team: 'both', cs2Id: 31,  csItem: 2,   image: '/weapons/weapon_taser.png' },
 
   // Heavies (shotguns + LMGs)
-  { internal: 'nova',          displayName: 'Nova',          category: 'heavies', subgroup: 'shotgun',         team: 'both', cs2Id: 35,  image: '/weapons/weapon_nova.png' },
-  { internal: 'xm1014',        displayName: 'XM1014',        category: 'heavies', subgroup: 'shotgun',         team: 'both', cs2Id: 25,  image: '/weapons/weapon_xm1014.png' },
-  { internal: 'sawedoff',      displayName: 'Sawed-Off',     category: 'heavies', subgroup: 'shotgun',         team: 'T',    cs2Id: 29,  image: '/weapons/weapon_sawedoff.png' },
-  { internal: 'mag7',          displayName: 'MAG-7',         category: 'heavies', subgroup: 'shotgun',         team: 'CT',   cs2Id: 27,  image: '/weapons/weapon_mag7.png' },
-  { internal: 'm249',          displayName: 'M249',          category: 'heavies', subgroup: 'mg',              team: 'both', cs2Id: 14,  image: '/weapons/weapon_m249.png' },
-  { internal: 'negev',         displayName: 'Negev',         category: 'heavies', subgroup: 'mg',              team: 'both', cs2Id: 28,  image: '/weapons/weapon_negev.png' },
+  { internal: 'nova',          displayName: 'Nova',          category: 'heavies', subgroup: 'shotgun',         team: 'both', cs2Id: 35,  csItem: 308, image: '/weapons/weapon_nova.png' },
+  { internal: 'xm1014',        displayName: 'XM1014',        category: 'heavies', subgroup: 'shotgun',         team: 'both', cs2Id: 25,  csItem: 307, image: '/weapons/weapon_xm1014.png' },
+  { internal: 'sawedoff',      displayName: 'Sawed-Off',     category: 'heavies', subgroup: 'shotgun',         team: 'T',    cs2Id: 29,  csItem: 310, image: '/weapons/weapon_sawedoff.png' },
+  { internal: 'mag7',          displayName: 'MAG-7',         category: 'heavies', subgroup: 'shotgun',         team: 'CT',   cs2Id: 27,  csItem: 309, image: '/weapons/weapon_mag7.png' },
+  { internal: 'm249',          displayName: 'M249',          category: 'heavies', subgroup: 'mg',              team: 'both', cs2Id: 14,  csItem: 311, image: '/weapons/weapon_m249.png' },
+  { internal: 'negev',         displayName: 'Negev',         category: 'heavies', subgroup: 'mg',              team: 'both', cs2Id: 28,  csItem: 312, image: '/weapons/weapon_negev.png' },
 ];
 
 export const KNIVES = [
@@ -143,6 +146,11 @@ export function groupByCategory(weapons) {
 export function getWeaponByDefindex(defindex) {
   const n = Number(defindex);
   return WEAPONS.find((w) => w.cs2Id === n) ?? null;
+}
+
+export function getWeaponByCsItem(csItem) {
+  const n = Number(csItem);
+  return WEAPONS.find((w) => w.csItem === n) ?? null;
 }
 
 export function getKnifeByDefindex(defindex) {

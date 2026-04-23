@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
-import { EquipmentRail } from './EquipmentRail';
+import { ListChecks } from 'lucide-react';
 import { useTranslation } from '../../hooks/useTranslation';
 import { ensureAgentCatalog, getAgentByModel, getDefaultAgent } from '../../lib/agents';
 import { IconCtShield } from '../ui/IconCtShield';
 import { IconTShield } from '../ui/IconTShield';
 
-export function CharacterPreview({ team, loadout, onOpenPicker }) {
+export function CharacterPreview({ team, loadout, onConfigureLoadout }) {
   const { t } = useTranslation();
   const [catalogReady, setCatalogReady] = useState(false);
 
@@ -33,8 +33,8 @@ export function CharacterPreview({ team, loadout, onOpenPicker }) {
   const TeamCrest = team === 'CT' ? IconCtShield : IconTShield;
 
   return (
-    <div className="flex flex-col gap-4 w-full">
-      <div className="relative flex-1 bg-gradient-to-b from-team-surface via-team-bg to-[#000] border-2 border-team-border rounded-xl overflow-hidden flex items-center justify-center min-h-[400px] shadow-[inset_0_0_80px_rgba(0,0,0,0.8),inset_0_0_0_1px_var(--color-team-accent-soft)]">
+    <div className="w-full flex flex-col gap-3">
+      <div className="relative aspect-[3/4] bg-gradient-to-b from-team-surface via-team-bg to-[#000] border-2 border-team-border rounded-xl overflow-hidden flex items-center justify-center shadow-[inset_0_0_80px_rgba(0,0,0,0.8),inset_0_0_0_1px_var(--color-team-accent-soft)]">
         {/* Corner decorative brackets */}
         <CornerBracket className="top-2 left-2" />
         <CornerBracket className="top-2 right-2" rotate={90} />
@@ -64,7 +64,19 @@ export function CharacterPreview({ team, loadout, onOpenPicker }) {
           <p className="text-xs font-semibold text-team-fg truncate">{agentName}</p>
         </div>
       </div>
-      <EquipmentRail team={team} loadout={loadout} onOpenPicker={onOpenPicker} />
+
+      {onConfigureLoadout && (
+        <button
+          type="button"
+          onClick={onConfigureLoadout}
+          className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-team-surface border-2 border-team-border hover:border-team-accent rounded-md text-team-fg hover:bg-team-elevated transition-all shadow-[0_4px_12px_rgba(0,0,0,0.3)] hover:shadow-[0_6px_18px_rgba(0,0,0,0.5)] group"
+        >
+          <ListChecks size={16} className="text-team-accent group-hover:scale-110 transition-transform" />
+          <span className="font-display font-bold text-xs uppercase tracking-[0.2em]">
+            {t('loadout_prefs.configure_button')}
+          </span>
+        </button>
+      )}
     </div>
   );
 }

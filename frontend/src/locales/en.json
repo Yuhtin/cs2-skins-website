@@ -35,6 +35,19 @@
   "category.pistols": "Pistols",
   "category.heavies": "Heavy",
   "category.equipment": "Equipment",
+  "category.loadout": "Loadout",
+
+  "loadout_prefs.section_title": "Round loadout",
+  "loadout_prefs.section_help": "Pick the weapon you want to spawn with on each round type. The retakes server hands it to you automatically — if you have a skin saved for it, you'll spawn wearing the skin.",
+  "loadout_prefs.pistol_round": "Pistol round",
+  "loadout_prefs.half_buy": "Half buy",
+  "loadout_prefs.full_buy": "Full buy",
+  "loadout_prefs.secondary": "Secondary",
+  "loadout_prefs.click_to_change": "Click to change",
+  "loadout_prefs.empty_slot": "Default",
+  "loadout_prefs.clear": "Clear",
+  "loadout_prefs.no_weapons": "No weapons available for this slot",
+  "loadout_prefs.configure_button": "Configure weapons",
 
   "subgroup.starting_pistol": "Starting Pistol",
   "subgroup.other_pistol": "Other Pistols",
@@ -56,6 +69,7 @@
   "equipment.agent_ct": "Agent (CT)",
   "equipment.agent_t": "Agent (T)",
   "equipment.click_to_change": "Click to change",
+  "equipment.temporarily_unavailable": "Temporarily unavailable",
 
   "editor.empty_title": "Pick a weapon",
   "editor.empty_subtitle": "Select a weapon from the arsenal to start customizing your loadout",

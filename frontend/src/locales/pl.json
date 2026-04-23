@@ -35,6 +35,19 @@
   "category.pistols": "Pistolety",
   "category.heavies": "Ciężkie",
   "category.equipment": "Wyposażenie",
+  "category.loadout": "Loadout",
+
+  "loadout_prefs.section_title": "Loadout rundy",
+  "loadout_prefs.section_help": "Wybierz broń, którą chcesz dostać w każdym typie rundy. Serwer retake da ci ją automatycznie — jeśli masz zapisany skin do tej broni, pojawisz się z tym skinem.",
+  "loadout_prefs.pistol_round": "Runda pistoletowa",
+  "loadout_prefs.half_buy": "Półzakup",
+  "loadout_prefs.full_buy": "Pełny zakup",
+  "loadout_prefs.secondary": "Drugorzędna",
+  "loadout_prefs.click_to_change": "Kliknij, aby zmienić",
+  "loadout_prefs.empty_slot": "Domyślne",
+  "loadout_prefs.clear": "Wyczyść",
+  "loadout_prefs.no_weapons": "Brak broni dostępnych dla tego slotu",
+  "loadout_prefs.configure_button": "Konfiguruj bronie",
 
   "subgroup.starting_pistol": "Pistolet startowy",
   "subgroup.other_pistol": "Inne pistolety",
@@ -56,6 +69,7 @@
   "equipment.agent_ct": "Agent (CT)",
   "equipment.agent_t": "Agent (T)",
   "equipment.click_to_change": "Kliknij, aby zmienić",
+  "equipment.temporarily_unavailable": "Tymczasowo niedostępne",
 
   "editor.empty_title": "Wybierz broń",
   "editor.empty_subtitle": "Wybierz broń z arsenału, aby rozpocząć dostosowywanie",

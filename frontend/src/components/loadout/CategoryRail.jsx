@@ -1,12 +1,13 @@
 import clsx from 'clsx';
-import { Target, Zap, Crosshair, Dumbbell, Package } from 'lucide-react';
+import { Target, Zap, Crosshair, Dumbbell, Package, ListChecks } from 'lucide-react';
 
 const RAIL_ITEMS = [
-  { id: 'pistols',   icon: Target,    labelKey: 'category.pistols' },
-  { id: 'smgs',      icon: Zap,       labelKey: 'category.smgs' },
-  { id: 'rifles',    icon: Crosshair, labelKey: 'category.rifles' },
-  { id: 'heavies',   icon: Dumbbell,  labelKey: 'category.heavies' },
-  { id: 'equipment', icon: Package,   labelKey: 'category.equipment' },
+  { id: 'pistols',   icon: Target,     labelKey: 'category.pistols' },
+  { id: 'smgs',      icon: Zap,        labelKey: 'category.smgs' },
+  { id: 'rifles',    icon: Crosshair,  labelKey: 'category.rifles' },
+  { id: 'heavies',   icon: Dumbbell,   labelKey: 'category.heavies' },
+  { id: 'equipment', icon: Package,    labelKey: 'category.equipment' },
+  { id: 'loadout',   icon: ListChecks, labelKey: 'category.loadout' },
 ];
 
 export function CategoryRail({ activeCategory, onSelectCategory, t }) {

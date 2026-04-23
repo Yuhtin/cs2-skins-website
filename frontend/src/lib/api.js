@@ -90,6 +90,24 @@ export function saveGloves(params) {
   return post('/skins.php', { action: 'gloves_save', ...params });
 }
 
+// --- RetakesAllocator weapon preferences ---
+// See backend/loadout-prefs.php for the JSON shape.
+
+export function getLoadoutPrefs() {
+  return post('/loadout-prefs.php', { action: 'get' });
+}
+
+// team: 'CT' | 'T'   slot: 'PistolRound' | 'HalfBuyPrimary' | 'FullBuyPrimary' | 'Secondary' | 'Preferred'
+// csItem: integer (CSSharp CsItem enum) or null to clear
+export function setLoadoutPref({ team, slot, csItem }) {
+  return post('/loadout-prefs.php', {
+    action: 'set',
+    team,
+    slot,
+    csItem: csItem ?? '',
+  });
+}
+
 export function logout() {
   window.location.href = `${API}/steamauth/logout.php`;
 }

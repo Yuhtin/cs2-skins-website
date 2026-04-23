@@ -125,6 +125,35 @@ export function useLoadout() {
       if (ctKnifeEnriched) next['knife_ct.CT'] = ctKnifeEnriched;
       if (tKnifeEnriched) next['knife_t.T'] = tKnifeEnriched;
 
+      // --- Build per-team knife-paints map ---
+      // wp_player_skins rows contain paint data for ALL knives the user has
+      // ever customized, not just the currently equipped one. Expose them as
+      // `knife_paints.CT` / `knife_paints.T` so the knife picker can show a
+      // preview image for each knife model the user already has a skin on.
+      const buildKnifePaintsMap = (skinRows) => {
+        const map = {};
+        if (!Array.isArray(skinRows)) return map;
+        for (const row of skinRows) {
+          const knifeMeta = KNIVES.find(
+            (k) => Number(k.defindex) === Number(row.weapon_defindex),
+          );
+          if (!knifeMeta) continue;
+          const paint = row.weapon_paint_id;
+          const skin = paint != null && Number(paint) !== 0
+            ? getSkinByDefindexAndPaint(knifeMeta.defindex, paint)
+            : null;
+          map[knifeMeta.internal] = {
+            weapon_defindex: knifeMeta.defindex,
+            weapon_paint_id: paint,
+            image: skin?.image || `/weapons/weapon_${knifeMeta.internal}.png`,
+            paint_name: skin?.paint_name,
+          };
+        }
+        return map;
+      };
+      next['knife_paints.CT'] = buildKnifePaintsMap(ctSkins);
+      next['knife_paints.T'] = buildKnifePaintsMap(tSkins);
+
       // --- Enrich gloves (one combined response, split per team) ---
       // gloves_addon_data response shape:
       //   { gloves_models: [{weapon_team, weapon_defindex}, ...],

@@ -35,6 +35,19 @@
   "category.pistols": "Pistolas",
   "category.heavies": "Pesadas",
   "category.equipment": "Equipamento",
+  "category.loadout": "Loadout",
+
+  "loadout_prefs.section_title": "Loadout do round",
+  "loadout_prefs.section_help": "Escolha a arma que você quer receber em cada tipo de round. O servidor de retake te dá ela automaticamente — se você já tem skin salva pra essa arma, vai nascer com a skin.",
+  "loadout_prefs.pistol_round": "Pistol",
+  "loadout_prefs.half_buy": "Semibuy",
+  "loadout_prefs.full_buy": "Buy",
+  "loadout_prefs.secondary": "Secundária",
+  "loadout_prefs.click_to_change": "Clique para trocar",
+  "loadout_prefs.empty_slot": "Padrão",
+  "loadout_prefs.clear": "Limpar",
+  "loadout_prefs.no_weapons": "Nenhuma arma disponível para este slot",
+  "loadout_prefs.configure_button": "Configurar armas",
 
   "subgroup.starting_pistol": "Pistola inicial",
   "subgroup.other_pistol": "Outras pistolas",
@@ -56,6 +69,7 @@
   "equipment.agent_ct": "Agente (CT)",
   "equipment.agent_t": "Agente (T)",
   "equipment.click_to_change": "Clique para trocar",
+  "equipment.temporarily_unavailable": "Temporariamente indisponível",
 
   "editor.empty_title": "Selecione uma arma",
   "editor.empty_subtitle": "Escolha uma arma no arsenal pra começar a customizar seu loadout",

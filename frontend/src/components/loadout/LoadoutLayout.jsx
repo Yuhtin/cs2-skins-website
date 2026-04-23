@@ -3,11 +3,14 @@ import { CategoryRail } from './CategoryRail';
 import { WeaponGroup } from './WeaponGroup';
 import { CharacterPreview } from './CharacterPreview';
 import { EquipmentSection } from './EquipmentSection';
+import { LoadoutPrefsSection } from './LoadoutPrefsSection';
 import { AgentPickerDialog } from '../popups/AgentPickerDialog';
 import { KnifePickerDialog } from '../popups/KnifePickerDialog';
 import { GlovesPickerDialog } from '../popups/GlovesPickerDialog';
+import { LoadoutPrefsPickerDialog } from '../popups/LoadoutPrefsPickerDialog';
 import { useTranslation } from '../../hooks/useTranslation';
 import { useSelectedWeapon } from '../../hooks/useSelectedWeapon';
+import { useLoadoutPrefs } from '../../hooks/useLoadoutPrefs';
 import { WEAPONS } from '../../lib/weapons';
 
 // Single-team loadout view: category rail | weapon groups | character preview
@@ -15,10 +18,13 @@ import { WEAPONS } from '../../lib/weapons';
 export function LoadoutLayout({ team, loadout, onRefreshLoadout }) {
   const { t } = useTranslation();
   const { selectWeapon } = useSelectedWeapon();
+  const { prefs, setPref } = useLoadoutPrefs();
   const [activeCategory, setActiveCategory] = useState('pistols');
   // activePicker lives here so the compact side rail AND the EquipmentSection
   // main-area view can share the same dialog set.
   const [activePicker, setActivePicker] = useState(null); // 'knife' | 'gloves' | 'agent' | null
+  // Loadout-prefs picker is keyed by slot name (PistolRound, FullBuyPrimary, ...).
+  const [activePrefSlot, setActivePrefSlot] = useState(null);
   const scrollContainerRef = useRef(null);
 
   // Combine team-specific + shared weapons into the current team's view.
@@ -41,6 +47,7 @@ export function LoadoutLayout({ team, loadout, onRefreshLoadout }) {
       : teamWeapons.filter((w) => w.category === activeCategory);
 
   const appliedKnife = loadout[team === 'CT' ? 'knife_ct.CT' : 'knife_t.T'];
+  const knifePaints = loadout[team === 'CT' ? 'knife_paints.CT' : 'knife_paints.T'] || {};
 
   // Opens the main EditorDrawer for editing a knife's paint. Accepts either
   // the currently-applied knife (from EquipmentRail/EditPaint button) or a
@@ -97,6 +104,13 @@ export function LoadoutLayout({ team, loadout, onRefreshLoadout }) {
             loadout={loadout}
             onOpenPicker={setActivePicker}
           />
+        ) : activeCategory === 'loadout' ? (
+          <LoadoutPrefsSection
+            team={team}
+            loadout={loadout}
+            prefs={prefs}
+            onOpenPicker={setActivePrefSlot}
+          />
         ) : (
           <WeaponGroup
             weapons={currentCategoryWeapons}
@@ -109,12 +123,7 @@ export function LoadoutLayout({ team, loadout, onRefreshLoadout }) {
         <CharacterPreview
           team={team}
           loadout={loadout}
-          onOpenPicker={(slotType) => {
-            // Clicking a slot in the small rail: navigate to the Equipment tab
-            // AND open the matching modal in one step.
-            setActiveCategory('equipment');
-            setActivePicker(slotType);
-          }}
+          onConfigureLoadout={() => setActiveCategory('loadout')}
         />
       </aside>
 
@@ -128,6 +137,7 @@ export function LoadoutLayout({ team, loadout, onRefreshLoadout }) {
         open={activePicker === 'knife'}
         team={team}
         appliedKnife={appliedKnife}
+        knifePaints={knifePaints}
         onClose={() => setActivePicker(null)}
         onSaved={onRefreshLoadout}
         onEditPaint={() => openKnifePaintEditor(appliedKnife)}
@@ -138,6 +148,16 @@ export function LoadoutLayout({ team, loadout, onRefreshLoadout }) {
         team={team}
         onClose={() => setActivePicker(null)}
         onSaved={onRefreshLoadout}
+      />
+      <LoadoutPrefsPickerDialog
+        open={activePrefSlot !== null}
+        team={team}
+        slot={activePrefSlot}
+        loadout={loadout}
+        currentCsItem={activePrefSlot ? prefs?.[team]?.[activePrefSlot] : null}
+        onPick={(csItem) => setPref(team, activePrefSlot, csItem)}
+        onClear={() => setPref(team, activePrefSlot, null)}
+        onClose={() => setActivePrefSlot(null)}
       />
     </div>
   );

@@ -19,7 +19,9 @@ export function GlovesPickerDialog({ open, team, onClose, onSaved }) {
 
   const filtered = useMemo(() => {
     if (!catalogReady) return [];
-    const all = getGlovesCatalog();
+    // Drop the synthetic "Gloves | Default" catalog row (weapon_defindex=0,
+    // image=""). It exists in gloves_en.json but isn't a real pickable item.
+    const all = getGlovesCatalog().filter((g) => g.image && Number(g.weapon_defindex) > 0);
     if (!search) return all;
     const q = search.toLowerCase();
     return all.filter((g) => (g.paint_name || '').toLowerCase().includes(q));
