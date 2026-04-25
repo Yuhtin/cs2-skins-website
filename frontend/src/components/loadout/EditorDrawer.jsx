@@ -4,7 +4,7 @@ import { useSelectedWeapon } from '../../hooks/useSelectedWeapon';
 import { EditorPanel } from '../editor/EditorPanel';
 import { useTranslation } from '../../hooks/useTranslation';
 
-export function EditorDrawer({ loadout, onSaved, onOpenStickerPicker, onOpenKeychainPicker }) {
+export function EditorDrawer({ loadout, onSaved }) {
   const { t } = useTranslation();
   const { selectedWeapon, selectWeapon } = useSelectedWeapon();
 
@@ -43,8 +43,6 @@ export function EditorDrawer({ loadout, onSaved, onOpenStickerPicker, onOpenKeyc
           mobile={true}
           loadout={loadout}
           onSaved={onSaved}
-          onOpenStickerPicker={onOpenStickerPicker}
-          onOpenKeychainPicker={onOpenKeychainPicker}
         />
       </div>
     </div>

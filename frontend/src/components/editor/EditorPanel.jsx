@@ -11,11 +11,9 @@ import { WearSlider } from './WearSlider';
 import { SeedInput } from './SeedInput';
 import { NametagInput } from './NametagInput';
 import { StatTrakSwitch } from './StatTrakSwitch';
-import { StickerSlots } from './StickerSlots';
-import { KeychainSlot } from './KeychainSlot';
 import { EditorFooter } from './EditorFooter';
 
-export function EditorPanel({ loadout, onSaved, onOpenStickerPicker, onOpenKeychainPicker, mobile = false }) {
+export function EditorPanel({ loadout, onSaved, mobile = false }) {
   const { t } = useTranslation();
   const { selectedWeapon, isDirty, clearDirty, markDirty, selectWeapon } = useSelectedWeapon();
   const [draft, setDraft] = useState(null);
@@ -111,20 +109,6 @@ export function EditorPanel({ loadout, onSaved, onOpenStickerPicker, onOpenKeych
         <SeedInput value={draft.seed} onChange={(v) => updateField('seed', v)} />
         <NametagInput value={draft.nametag} onChange={(v) => updateField('nametag', v)} />
         <StatTrakSwitch value={draft.stattrak} onChange={(v) => updateField('stattrak', v)} />
-        <StickerSlots
-          stickers={draft.stickers}
-          onOpenPicker={(slotIdx) => onOpenStickerPicker(slotIdx, draft, updateField)}
-          onRemove={(slotIdx) => {
-            const next = [...draft.stickers];
-            next[slotIdx] = '0;0;0;0;0;0;0';
-            updateField('stickers', next);
-          }}
-        />
-        <KeychainSlot
-          keychain={draft.keychain}
-          onOpenPicker={() => onOpenKeychainPicker(draft, updateField)}
-          onRemove={() => updateField('keychain', '0;0;0;0;0')}
-        />
       </div>
       <EditorFooter isDirty={isDirty} isSaving={isSaving} onSave={handleSave} onRevert={handleRevert} />
     </aside>
