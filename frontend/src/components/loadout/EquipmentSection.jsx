@@ -3,14 +3,18 @@ import { useTranslation } from '../../hooks/useTranslation';
 
 // Main-area view when the Equipment tab is active: three large cards (knife,
 // gloves, agent) that each open the matching picker dialog via onOpenPicker.
+// Gloves are temporarily disabled: WeaponPaints build-418 added a `lastinv`
+// client command in GivePlayerGloves to fight model overlap, which forces a
+// weapon switch every time gloves apply and breaks the equip animation.
+// Re-enable once a build ships without the lastinv hack.
 const SLOTS_CT = [
   { slotType: 'knife',  labelKey: 'equipment.knife_ct',  keySuffix: 'knife_ct.CT',  icon: Swords },
-  { slotType: 'gloves', labelKey: 'equipment.gloves_ct', keySuffix: 'ct_gloves.CT', icon: Hand },
+  { slotType: 'gloves', labelKey: 'equipment.gloves_ct', keySuffix: 'ct_gloves.CT', icon: Hand, disabled: true },
   { slotType: 'agent',  labelKey: 'equipment.agent_ct',  keySuffix: 'ct_agent.CT',  icon: UserSquare2 },
 ];
 const SLOTS_T = [
   { slotType: 'knife',  labelKey: 'equipment.knife_t',  keySuffix: 'knife_t.T',    icon: Swords },
-  { slotType: 'gloves', labelKey: 'equipment.gloves_t', keySuffix: 'tt_gloves.T',  icon: Hand },
+  { slotType: 'gloves', labelKey: 'equipment.gloves_t', keySuffix: 'tt_gloves.T',  icon: Hand, disabled: true },
   { slotType: 'agent',  labelKey: 'equipment.agent_t',  keySuffix: 'tt_agent.T',   icon: UserSquare2 },
 ];
 
@@ -46,12 +50,19 @@ export function EquipmentSection({ team, loadout, onOpenPicker }) {
               ? applied.displayName
               : t('editor.empty_title');
 
+          const isDisabled = slot.disabled;
+
           return (
             <button
               key={slot.slotType}
               type="button"
-              onClick={() => onOpenPicker(slot.slotType)}
-              className="group relative bg-team-surface border-2 border-team-border rounded-lg p-6 hover:border-team-accent transition-all text-center flex flex-col items-center justify-between gap-4 min-h-[320px] shadow-[0_4px_16px_rgba(0,0,0,0.4)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.6)]"
+              onClick={isDisabled ? undefined : () => onOpenPicker(slot.slotType)}
+              disabled={isDisabled}
+              className={`group relative bg-team-surface border-2 border-team-border rounded-lg p-6 transition-all text-center flex flex-col items-center justify-between gap-4 min-h-[320px] shadow-[0_4px_16px_rgba(0,0,0,0.4)] ${
+                isDisabled
+                  ? 'opacity-40 cursor-not-allowed'
+                  : 'hover:border-team-accent hover:shadow-[0_8px_24px_rgba(0,0,0,0.6)]'
+              }`}
             >
               <div className="flex items-center gap-2 text-team-accent">
                 <Icon size={16} />
@@ -61,7 +72,7 @@ export function EquipmentSection({ team, loadout, onOpenPicker }) {
               </div>
 
               <div className="flex-1 flex items-center justify-center w-full overflow-hidden">
-                {applied?.image ? (
+                {!isDisabled && applied?.image ? (
                   <img
                     src={applied.image}
                     alt={displayName}
@@ -74,11 +85,11 @@ export function EquipmentSection({ team, loadout, onOpenPicker }) {
               </div>
 
               <div className="w-full">
-                <p className="text-sm font-semibold text-team-fg truncate" title={displayName}>
-                  {displayName}
+                <p className="text-sm font-semibold text-team-fg truncate" title={isDisabled ? label : displayName}>
+                  {isDisabled ? label : displayName}
                 </p>
                 <p className="text-[10px] text-team-muted uppercase tracking-wider mt-1">
-                  {t('equipment.click_to_change')}
+                  {isDisabled ? t('equipment.temporarily_unavailable') : t('equipment.click_to_change')}
                 </p>
               </div>
             </button>
