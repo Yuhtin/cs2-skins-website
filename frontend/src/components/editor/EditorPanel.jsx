@@ -116,8 +116,9 @@ export function EditorPanel({ loadout, onSaved, mobile = false }) {
 }
 
 function buildDraftFromLoadout(selectedWeapon, loadout) {
-  const team = selectedWeapon.team === 'both' ? 'CT' : selectedWeapon.team;
-  const key = `${selectedWeapon.internal}.${team}`;
+  // selectedWeapon.team is always 'CT' or 'T' — WeaponGroup pins shared weapons
+  // (definition team='both') to whichever tab the user clicked from.
+  const key = `${selectedWeapon.internal}.${selectedWeapon.team}`;
   const applied = loadout[key];
   return {
     paintId: applied?.weapon_paint_id ?? 0,
@@ -137,10 +138,9 @@ function buildDraftFromLoadout(selectedWeapon, loadout) {
 }
 
 function buildSaveParams(weapon, draft) {
-  // Backend accepts team as string 'CT' or 'T'.
-  // For 'both' weapons we pick CT arbitrarily — the skin applies for both teams
-  // because the plugin's wp_player_skins row is per (steamid, weapon_team, defindex).
-  const team = weapon.team === 'T' ? 'T' : 'CT';
+  // weapon.team is always 'CT' or 'T' — WeaponGroup overrides shared weapons
+  // ('both') with the current tab so each side gets its own wp_player_skins row.
+  const team = weapon.team;
   return {
     team,
     weapon_defindex: weapon.cs2Id,

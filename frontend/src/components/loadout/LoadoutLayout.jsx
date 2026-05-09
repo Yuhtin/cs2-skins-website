@@ -116,6 +116,7 @@ export function LoadoutLayout({ team, loadout, onRefreshLoadout }) {
             weapons={currentCategoryWeapons}
             categoryId={activeCategory}
             loadout={loadout}
+            team={team}
           />
         )}
       </main>

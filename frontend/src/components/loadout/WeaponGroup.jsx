@@ -5,7 +5,12 @@ import { useSelectedWeapon } from '../../hooks/useSelectedWeapon';
 
 // Renders all weapons of a given category for the current team,
 // broken into subgroups with team-themed headers.
-export function WeaponGroup({ weapons, categoryId, loadout }) {
+//
+// `team` is the currently active loadout tab ('CT' or 'T'). Shared weapons
+// (definition team='both') still need to be saved/loaded against ONE team's
+// row — we pin them to whichever side the user is currently editing so each
+// side can hold a different skin in wp_player_skins.
+export function WeaponGroup({ weapons, categoryId, loadout, team }) {
   const { t } = useTranslation();
   const { selectedWeapon, selectWeapon } = useSelectedWeapon();
 
@@ -35,16 +40,17 @@ export function WeaponGroup({ weapons, categoryId, loadout }) {
           </div>
           <div className="flex flex-wrap gap-4">
             {group.weapons.map((weapon) => {
-              const applied = loadout[`${weapon.internal}.${weapon.team === 'both' ? 'CT' : weapon.team}`]
-                || loadout[`${weapon.internal}.T`]
-                || loadout[`${weapon.internal}.CT`];
+              // Shared weapons (team='both') get pinned to the current tab so each
+              // team side can hold a distinct skin row in the DB.
+              const effectiveTeam = weapon.team === 'both' ? team : weapon.team;
+              const applied = loadout[`${weapon.internal}.${effectiveTeam}`];
               return (
                 <WeaponCard
                   key={weapon.internal}
                   weapon={weapon}
                   appliedSkin={applied}
                   isSelected={selectedWeapon?.internal === weapon.internal}
-                  onClick={() => selectWeapon(weapon)}
+                  onClick={() => selectWeapon({ ...weapon, team: effectiveTeam })}
                 />
               );
             })}
