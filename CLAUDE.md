@@ -6,7 +6,7 @@ Operational notes for the deployed CS2 server + skins panel. Things in here are 
 
 - **Host:** `root@212.38.89.33` (Ubuntu, Docker)
 - **User on host:** `cs2` (uid 1000) owns `/home/cs2/`
-- **Active branch (deployed):** `feat/visual-ingame-v2` — both this repo and `/home/cs2/skins-panel/` track it.
+- **Active branch (deployed):** `master` — both this repo and `/home/cs2/skins-panel/` track it. (Merged from `feat/visual-ingame-v2` on 2026-07-03; that branch and `feat/redesign-v2` are deleted, `master` is now the GitHub default branch.)
 
 ### Docker containers
 
@@ -78,7 +78,7 @@ Files: `/home/cs2/{mm,css}-autoupdate.sh`, units in `/etc/systemd/system/{mm,css
 
 The dist is built **on the server** inside an ephemeral node container (no node on host):
 ```bash
-ssh root@212.38.89.33 "cd /home/cs2/skins-panel && git pull origin feat/visual-ingame-v2 && \
+ssh root@212.38.89.33 "cd /home/cs2/skins-panel && git pull origin master && \
   docker run --rm -v /home/cs2/skins-panel:/app -w /app/frontend node:20-alpine sh -c 'npm run build'"
 ```
 
@@ -158,6 +158,6 @@ ssh root@212.38.89.33 "docker exec cs2-mysql mysql -u root -p<pw> weaponpaints -
 
 # Verify three-way alignment
 echo "local: $(git log -1 --oneline)"
-echo "github: $(git ls-remote origin feat/visual-ingame-v2 | awk '{print substr($1,1,7)}')"
+echo "github: $(git ls-remote origin master | awk '{print substr($1,1,7)}')"
 echo "server: $(ssh root@212.38.89.33 'cd /home/cs2/skins-panel && git log -1 --oneline')"
 ```
