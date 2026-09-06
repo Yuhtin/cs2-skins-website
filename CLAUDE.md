@@ -39,6 +39,27 @@ ssh root@212.38.89.33 "docker stop cs2-server && sudo -u cs2 /home/cs2/update_cs
 ```
 The script runs steamcmd `+app_update 730 validate` and re-inserts the `Game csgo/addons/metamod` line into `gameinfo.gi` if Valve overwrote it.
 
+### Disk space — check BEFORE updating (Jul 2026)
+The CS2 install needs ~18G free to apply an update. On Jul 30 the disk hit 100%, steamcmd aborted with
+`Error! App '730' state is 0x626` and left the install broken (`gameinfo.gi` deleted, 13G of partials in
+`steamapps/downloading`). Re-running steamcmd after freeing space resumes and fixes it. `df -h /` first.
+
+Culprit was `/var/lib/apport/coredump` — 8.4G of 1.7G core dumps from `cs2` crashing twice a day.
+Apport is now disabled (`enabled=0` in `/etc/default/apport`, `systemctl disable --now apport`); re-check
+if dumps reappear. Confirmed still fixed Sep 6, 2026 (coredump dir is 4K).
+
+**The recurring culprit is now `/var/log/journal`** — it regrows to ~3G and is the first thing to reclaim:
+`journalctl --vacuum-size=200M` freed 2.9G on Sep 6, 2026 (88% → 85%). Note this host runs many unrelated
+Docker stacks (easypanel, langfuse, mongo, postgres), so ~16G of the image store is NOT ours to prune.
+Other reclaimables: `/var/log/btmp` (login-scan spam), unused Docker images.
+
+**Do NOT delete `game/csgo_community_addons/` (7G) or the workshop `.vpk`s in `game/csgo/maps/`** to free
+space — that's Valve-shipped official content; the next `app_update validate` re-downloads all of it.
+
+Also: `docker container prune` deletes the stopped `cs2-server` container mid-update. Harmless (all state
+is in bind mounts) but it must be recreated with `cd /home/cs2/docker && docker compose up -d cs2` — the
+compose service is named **`cs2`**, not `cs2-server` (that's the `container_name`).
+
 ### Critical `LD_LIBRARY_PATH` (Apr 2026)
 A CS2 update on Apr 20 added `libv8.so` as a `libserver.so` dep. Bare-metal launches must export:
 ```bash
@@ -55,18 +76,30 @@ tail -f /home/cs2/cs2-server/game/bin/linuxsteamrt64/counterstrikesharp.log
 
 ## Plugin update procedure
 
-**Auto-update pollers are DISABLED (Apr 27, 2026 — user preference: only update on breaking changes after reviewing release notes).**
+There are THREE pollers, and they are NOT in the same state (verified Sep 6, 2026):
 
-Scripts are still on disk if you want to re-enable later:
+| Timer | State | Poll interval |
+|---|---|---|
+| `mm-autoupdate.timer` | **disabled** | 5 min |
+| `css-autoupdate.timer` | **disabled** | 5 min |
+| `wp-autoupdate.timer` | **enabled + active** | 30 min |
+
+MM and CSS were disabled Apr 27, 2026 (user preference: only update on breaking changes after reviewing
+release notes). WP was left running, so **WeaponPaints updates itself unattended** — its installed build can
+move without anyone touching the box. Check `/home/cs2/.wp-current-build` before assuming a WP version.
+
 ```bash
-# Re-enable both pollers (5-min cron via systemd)
+# Re-enable the two disabled pollers
 ssh root@212.38.89.33 "systemctl enable --now mm-autoupdate.timer css-autoupdate.timer"
 
-# One-shot manual run
-ssh root@212.38.89.33 "systemctl start mm-autoupdate.service"   # or css-autoupdate.service
+# One-shot manual run (this is the normal way to install a reviewed update)
+ssh root@212.38.89.33 "systemctl start mm-autoupdate.service"   # or css-/wp-autoupdate.service
 ```
 
-Files: `/home/cs2/{mm,css}-autoupdate.sh`, units in `/etc/systemd/system/{mm,css}-autoupdate.{service,timer}`. State files: `/home/cs2/.{mm,css}-current-build`. The MM updater handles `2.0.0.x` only and ignores the legacy `1.12.x` line.
+Each script backs up the current install before extracting, writes the new tag to its state file, and drops a
+`/home/cs2/{mm,css,wp}-update-available.txt` note. They do NOT restart the container — stop it first.
+
+Files: `/home/cs2/{mm,css,wp}-autoupdate.sh`, units in `/etc/systemd/system/{mm,css,wp}-autoupdate.{service,timer}`. State files: `/home/cs2/.{mm,css,wp}-current-build`. The MM updater handles `2.0.0.x` only and ignores the legacy `1.12.x` line.
 
 ### Manual update flow (recommended)
 1. Check GitHub for latest release on `alliedmodders/metamod-source`, `roflmuffin/CounterStrikeSharp`, `Nereziel/cs2-WeaponPaints`.
@@ -119,14 +152,6 @@ sed 's/INSERT INTO/INSERT IGNORE INTO/g' /home/cs2/wp-backups/<file>.sql | \
 
 ## Temporary states (re-enable when blocker clears)
 
-### Gloves slot disabled in site UI
-- **Where:** `frontend/src/components/loadout/EquipmentSection.jsx` — `disabled: true` on the gloves slot in `SLOTS_CT`/`SLOTS_T`.
-- **Server-side counterpart:** `WeaponPaints.json` has `GloveEnabled: false`.
-- **Reason:** WP `build-418` added `player.ExecuteClientCommand("lastinv")` inside `GivePlayerGloves` to fix model overlap. Side effect: every weapon equip triggers an animation glitch (slow draw). Author acknowledged ("a better solution may be possible").
-- **Re-enable when:** WP ships a build > 418 that removes the `lastinv` calls.
-  - Server: `sed -i 's/"GloveEnabled": false/"GloveEnabled": true/' /home/cs2/cs2-server/game/csgo/addons/counterstrikesharp/configs/plugins/WeaponPaints/WeaponPaints.json && docker restart cs2-server`
-  - Repo: `git revert 924651b` (the gloves-disable commit) and rebuild dist.
-
 ### Sticker/keychain editor removed
 Removed in commit `a144270` (Apr 25, 2026). User decided the feature wasn't at the quality bar they wanted. Existing sticker/keychain data in DB is preserved on save (the editor still echoes the values back), so no data loss when reintroducing later. To bring it back: revert `a144270`, restore the deleted catalog files from bymykel.
 
@@ -136,6 +161,7 @@ Removed in commit `a144270` (Apr 25, 2026). User decided the feature wasn't at t
 - **Do NOT rebuild dist on the server before pulling.** Always pull first; the build reads from `frontend/src/` which must be the latest committed state.
 - **CS2 updates regularly break Metamod ABI.** Symptom: `FATAL ERROR: CAppSystemDict:Unable to create interface ... from server`. The fix usually arrives within 24h on the AlliedModders releases page. While waiting, the server simply can't boot — there's no temporary workaround.
 - **When an agent model errors with `RESOURCE_TYPE_MODEL ... is not loaded and may have been deleted`, the user's saved agent variant was removed in a Valve update.** Check `wp_player_agents` and clear the offending rows. WP build-418 added an agents file that should validate models, but historically Valve has removed variants without notice.
+- **Gloves are ENABLED again (since Apr 28, 2026), but the `lastinv` cause was never fixed upstream.** The slot was disabled in `924651b` and re-enabled in `6c6a005`; `WeaponPaints.json` has `GloveEnabled: true`. WP still calls `player.ExecuteClientCommand("lastinv")` twice in `WeaponAction.cs` (verified on `build-459`, Sep 2026). If the slow-draw animation glitch on weapon equip is reported again, that is the cause — not a regression in this repo.
 - **`Probably dev version detected` in WP logs** = the plugin doesn't recognize this CS2 version. Skin/agent application may partially fail silently. Update WP to a build with a matching `Bump css version` commit.
 
 ## Helpful one-liners
