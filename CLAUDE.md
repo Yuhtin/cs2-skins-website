@@ -159,6 +159,14 @@ Removed in commit `a144270` (Apr 25, 2026). User decided the feature wasn't at t
 
 - **Three repos must stay aligned: local Mac, GitHub origin, server clone.** When making site changes, commit + push from local, then `git pull` on server, then rebuild dist. The user explicitly cares about this alignment — don't leave the server out of sync.
 - **Do NOT rebuild dist on the server before pulling.** Always pull first; the build reads from `frontend/src/` which must be the latest committed state.
+- **A server can be perfectly healthy and still reject every player.** Symptom: container up, 12 plugins loaded, no errors, but the log shows `Bad host version <N>` on each connect and players silently fail to join. It means Valve shipped a CS2 update and the clients are ahead of the server. There is nothing wrong with the plugins — just update CS2. Detect it without waiting for a complaint:
+  ```bash
+  # required_version here is the same number that shows up in "Bad host version"
+  curl -s 'https://api.steampowered.com/ISteamApps/UpToDateCheck/v1?appid=730&version=0'
+  ssh root@212.38.89.33 "grep PatchVersion /home/cs2/cs2-server/game/csgo/steam.inf"
+  ```
+  Verify the fix by passing the installed build back to the same endpoint — it should return `up_to_date: true`.
+- **CS2 has no downgrade path via steamcmd**, so treat a version bump as one-way. When a CS2 update lands before the plugins support it, the tradeoff is: stay behind (server rejects everyone) or move ahead (plugins may break). Since a rejecting server is already unusable, moving ahead rarely loses anything. Fallback if Metamod/CSS break: comment out the `Game csgo/addons/metamod` line in `gameinfo.gi` so the server boots vanilla and is at least joinable, then restore it when the plugins catch up.
 - **CS2 updates regularly break Metamod ABI.** Symptom: `FATAL ERROR: CAppSystemDict:Unable to create interface ... from server`. The fix usually arrives within 24h on the AlliedModders releases page. While waiting, the server simply can't boot — there's no temporary workaround.
 - **When an agent model errors with `RESOURCE_TYPE_MODEL ... is not loaded and may have been deleted`, the user's saved agent variant was removed in a Valve update.** Check `wp_player_agents` and clear the offending rows. WP build-418 added an agents file that should validate models, but historically Valve has removed variants without notice.
 - **Gloves are ENABLED again (since Apr 28, 2026), but the `lastinv` cause was never fixed upstream.** The slot was disabled in `924651b` and re-enabled in `6c6a005`; `WeaponPaints.json` has `GloveEnabled: true`. WP still calls `player.ExecuteClientCommand("lastinv")` twice in `WeaponAction.cs` (verified on `build-459`, Sep 2026). If the slow-draw animation glitch on weapon equip is reported again, that is the cause — not a regression in this repo.
