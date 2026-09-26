@@ -155,13 +155,6 @@ sed 's/INSERT INTO/INSERT IGNORE INTO/g' /home/cs2/wp-backups/<file>.sql | \
 ### Sticker/keychain editor removed
 Removed in commit `a144270` (Apr 25, 2026). User decided the feature wasn't at the quality bar they wanted. Existing sticker/keychain data in DB is preserved on save (the editor still echoes the values back), so no data loss when reintroducing later. To bring it back: revert `a144270`, restore the deleted catalog files from bymykel.
 
-### RetakesAllocator disabled (Sep 26, 2026)
-CS2 1.41.8.5 broke the signature RetakesAllocator hooks (`NativeException: Invalid function pointer` on load). The failed load
-leaves a dangling hook, and the first bot/player that joins a team crashes the server
-(`A callback was made on a garbage collected delegate`, container restart loop). Updating CSS to v1.0.375 + MM 2.0.0.1472 did NOT fix it.
-Plugin moved to `/home/cs2/disabled-plugins/RetakesAllocator-2026-09-26/`. Upstream `yonilerner/cs2-retakes-allocator` last released
-v2.4.2 (Jul 2025). To restore: move it back into `addons/counterstrikesharp/plugins/` once a release fixes it.
-
 ## Common gotchas
 
 - **Three repos must stay aligned: local Mac, GitHub origin, server clone.** When making site changes, commit + push from local, then `git pull` on server, then rebuild dist. The user explicitly cares about this alignment — don't leave the server out of sync.
@@ -177,6 +170,12 @@ v2.4.2 (Jul 2025). To restore: move it back into `addons/counterstrikesharp/plug
 - **CS2 updates regularly break Metamod ABI.** Symptom: `FATAL ERROR: CAppSystemDict:Unable to create interface ... from server`. The fix usually arrives within 24h on the AlliedModders releases page. While waiting, the server simply can't boot — there's no temporary workaround.
 - **When an agent model errors with `RESOURCE_TYPE_MODEL ... is not loaded and may have been deleted`, the user's saved agent variant was removed in a Valve update.** Check `wp_player_agents` and clear the offending rows. WP build-418 added an agents file that should validate models, but historically Valve has removed variants without notice.
 - **Gloves are ENABLED again (since Apr 28, 2026), but the `lastinv` cause was never fixed upstream.** The slot was disabled in `924651b` and re-enabled in `6c6a005`; `WeaponPaints.json` has `GloveEnabled: true`. WP still calls `player.ExecuteClientCommand("lastinv")` twice in `WeaponAction.cs` (verified on `build-459`, Sep 2026). If the slow-draw animation glitch on weapon equip is reported again, that is the cause — not a regression in this repo.
+- **RetakesAllocator signatures are patched by hand (Sep 26, 2026).** Upstream `yonilerner/cs2-retakes-allocator` is abandoned (v2.4.2, Jul 2025).
+  Signatures in `plugins/RetakesAllocator/gamedata/RetakesAllocator_gamedata.json` come from the maintained fork
+  `Micka2302/cs2-retakes-allocator-2.0` (`Resources/RetakesAllocator_gamedata.json`). `AutoUpdateSignatures` is set to **false** in its
+  `config/config.json` — if it's true, every load re-downloads the stale upstream file and silently undoes the patch.
+  Symptom of stale signatures: `NativeException: Invalid function pointer` on load, then a crash loop the moment a bot joins a team
+  (`A callback was made on a garbage collected delegate`). Fix: copy the fork's gamedata again. Old file backed up in `/home/cs2/wp-backups/`.
 - **`Probably dev version detected` in WP logs** = the plugin doesn't recognize this CS2 version. Skin/agent application may partially fail silently. Update WP to a build with a matching `Bump css version` commit.
 
 ## Helpful one-liners
