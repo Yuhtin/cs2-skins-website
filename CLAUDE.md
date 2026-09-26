@@ -155,6 +155,13 @@ sed 's/INSERT INTO/INSERT IGNORE INTO/g' /home/cs2/wp-backups/<file>.sql | \
 ### Sticker/keychain editor removed
 Removed in commit `a144270` (Apr 25, 2026). User decided the feature wasn't at the quality bar they wanted. Existing sticker/keychain data in DB is preserved on save (the editor still echoes the values back), so no data loss when reintroducing later. To bring it back: revert `a144270`, restore the deleted catalog files from bymykel.
 
+### RetakesAllocator disabled (Sep 26, 2026)
+CS2 1.41.8.5 broke the signature RetakesAllocator hooks (`NativeException: Invalid function pointer` on load). The failed load
+leaves a dangling hook, and the first bot/player that joins a team crashes the server
+(`A callback was made on a garbage collected delegate`, container restart loop). Updating CSS to v1.0.375 + MM 2.0.0.1472 did NOT fix it.
+Plugin moved to `/home/cs2/disabled-plugins/RetakesAllocator-2026-09-26/`. Upstream `yonilerner/cs2-retakes-allocator` last released
+v2.4.2 (Jul 2025). To restore: move it back into `addons/counterstrikesharp/plugins/` once a release fixes it.
+
 ## Common gotchas
 
 - **Three repos must stay aligned: local Mac, GitHub origin, server clone.** When making site changes, commit + push from local, then `git pull` on server, then rebuild dist. The user explicitly cares about this alignment — don't leave the server out of sync.
